@@ -1,5 +1,17 @@
-# Prerequisites
+# current project
+!CMakeLists.txt
+build/*
+.idea
+cmake-build-debug
+build
+.vscode
+__temp
+
+# system files
+*.DS_Store
+.DS_Store
 *.d
+*.user
 
 # Compiled Object files
 *.slo
