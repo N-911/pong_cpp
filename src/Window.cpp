@@ -1,7 +1,5 @@
-//
-// Created by snikolayen on 25.12.2020.
-//
 #include "Window.h"
+#include "Settings.h"
 #include "iostream"
 
 using std::cout;
@@ -10,16 +8,36 @@ using std::endl;
 Window::Window() {
   cout << "Window Construtor" << endl;
   init_SDL();
-  create_window();
+//  create_window();
   setup_window_icon();
+  init_window_and_renderer();
 
   m_surface = IMG_Load("resources/floor.png");
+
+
   if (m_surface == NULL) {
     cout << "[Error] Unable to load image : " << SDL_GetError() << endl;
     exit(0);
   }
+//===============
+
+  // Load image at specified path
+  m_surface = IMG_Load("resources/floor.png");
+  if (m_surface == NULL) {
+    printf("[Error] Unable to load image : %s\n", SDL_GetError());
+    exit(0);
+  } else {
+    m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
+    if (m_texture == NULL) {
+      printf("[Error] Unable to create texture : %s\n", SDL_GetError());
+    }
+
+    SDL_FreeSurface(m_surface);
+  }
+
+
   m_text_color = (SDL_Color){255, 255, 0, 255};
-  m_pixels = (unsigned int *)m_surface->pixels;
+//  m_pixels = (unsigned int *)m_surface->pixels;
 }
 
 
@@ -33,8 +51,8 @@ Window::~Window() {
   Mix_CloseAudio();
 
   SDL_DestroyTexture(m_texture);
-  SDL_DestroyRenderer(m_render);
-  SDL_FreeSurface(m_surface);
+  SDL_DestroyRenderer(m_renderer);
+//  SDL_FreeSurface(m_surface);
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 }
@@ -88,18 +106,29 @@ void Window::create_window()
   } else {
     cout << "Created Window and Renderer " << WIDTH << "x" << HEIGHT << endl;
   }
-  if (!(m_render = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED)))
+  if (!(m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED)))
   {
     cout << SDL_GetError() << endl;
     exit(1);
   }
-  if (!(m_texture = SDL_CreateTexture(m_render, SDL_PIXELFORMAT_ARGB8888,
+  if (!(m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888,
                                     SDL_TEXTUREACCESS_STREAMING, WIDTH, HEIGHT)))
   {
     cout << SDL_GetError() << endl;
     exit(1);
   }
 }
+
+void Window::init_window_and_renderer()
+{
+  if (SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &m_window, &m_renderer) != 0) {
+    printf("[Error] Creating Window and Renderer: %s\n", SDL_GetError());
+    exit(0);
+  } else {
+    printf("Created Window and Renderer %dx%d\n", WIDTH,HEIGHT);
+  }
+}
+
 
 void Window::setup_window_icon()
 {
@@ -113,12 +142,3 @@ void Window::setup_window_icon()
   SDL_FreeSurface(iconSurface);
 }
 
-void Window::draw_surface(unsigned int *color) const {
-  for (int i = 0; i < W; i++)
-  {
-    for (int j = 0; j < H; j++)
-    {
-      color[i + j * WIDTH] = m_pixels[i + j * W];
-    }
-  }
-}
