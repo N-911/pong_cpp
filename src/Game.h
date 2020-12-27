@@ -5,6 +5,9 @@
 #include "Player.h"
 #include <memory>
 #include "Settings.h"
+#include "GamePlayController.h"
+
+//static int lastTime=0;
 
 class Game {
 
@@ -21,11 +24,15 @@ class Game {
  private:
   SDL_Event	m_ev;
   Window m_window;
+
+  int frameCount, timerFPS, lastFrame, fps, lastTime;
+
 //  SDL_Rect m_sampleRect;
 
   std::shared_ptr<Ball> m_ball;
   std::shared_ptr<Player> m_player_left;
   std::shared_ptr<Player> m_player_right;
+  GamePlayController* m_game_play;
 
   SDL_Surface *m_score_surface;
   SDL_Texture *m_score_texture;
@@ -45,7 +52,7 @@ class Game {
   void on_event(SDL_Event& event);
 
   void draw_score();
-  bool check_goal() const;
+  bool check_goal();
   void colision(std::shared_ptr<Player> player);
 };
 

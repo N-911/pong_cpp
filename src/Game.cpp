@@ -10,7 +10,9 @@ Game::Game() {
   m_loop = SDL_TRUE;
   m_number_pl = 2;
 
-//  m_number_pl = show_menu();
+  m_game_play = new GamePlayController();
+
+  m_number_pl = show_menu();
   m_text_color = (SDL_Color) {255, 255, 0, 255};
   m_player_left = std::shared_ptr<Player>(new Player(0));
   m_player_right = std::shared_ptr<Player>(new Player(1));
@@ -19,6 +21,8 @@ Game::Game() {
 
 Game::~Game() {
   cout << "Game Destructor" << endl;
+
+  delete m_game_play;
   SDL_DestroyTexture(m_text_texture[0]);
   SDL_DestroyTexture(m_text_texture[1]);
   SDL_FreeSurface(m_text_surface[0]);
@@ -29,7 +33,15 @@ void Game::main_loop() {
   cout << "Game main_loop" << endl;
   SDL_Event event;
 
+
   while (m_loop) {
+    lastFrame=SDL_GetTicks();
+    if(lastFrame>=(lastTime+1000)) {
+      lastTime=lastFrame;
+      fps=frameCount;
+      frameCount=0;
+    }
+
     // Allow quiting with escape key by polling for pending events
     while (SDL_PollEvent(&event)) {
 //    while (SDL_WaitEvent(&event)) {  // not working
@@ -41,6 +53,7 @@ void Game::main_loop() {
       colision(m_player_left);
       colision(m_player_right);
       draw();
+      check_goal();
   }
   // clean
 }
@@ -115,7 +128,8 @@ int Game::show_menu() {
   while (1) {
     while (SDL_PollEvent(&m_ev)) {
       switch (m_ev.type) {
-        case SDL_QUIT:SDL_FreeSurface(menus[0]);
+        case SDL_QUIT:
+          SDL_FreeSurface(menus[0]);
           SDL_FreeSurface(menus[1]);
           SDL_FreeSurface(screen);
           SDL_DestroyTexture(texture);
@@ -173,13 +187,10 @@ int Game::show_menu() {
     }
 
     texture = SDL_CreateTextureFromSurface(m_window.getRender(), screen);
-
     SDL_Rect rect;
-
     SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
     rect.x = (WIDTH - rect.w) / 2;
     rect.y = (HEIGHT - rect.h) / 2;
-
     SDL_RenderClear(m_window.getRender());
     SDL_RenderCopy(m_window.getRender(), texture, NULL, &rect);
     SDL_RenderPresent(m_window.getRender());
@@ -188,6 +199,14 @@ int Game::show_menu() {
 
 void Game::draw() {
   SDL_RenderClear(m_window.getRender());
+
+
+  frameCount++;
+  int timerFPS = SDL_GetTicks()-lastFrame;
+  if(timerFPS<(1000/60)) {
+    SDL_Delay((1000/60)-timerFPS);
+  }
+
 
   // Blank out the renderer with all black
   SDL_SetRenderDrawColor(m_window.getRender(), 0, 0, 0, 0);
@@ -301,9 +320,7 @@ void Game::events() {
     }
   }
 }
-bool Game::check_goal() const {
-  return false;
-}
+
 void Game::Exit() {
   m_run = false;
 }
@@ -391,6 +408,31 @@ void Game::colision(std::shared_ptr<Player> player) {
   }
 }
 
+bool Game::check_goal()
+{
+//  cout << " check_goal" << endl;
+
+  if (m_ball->pos.x > W - 100) {
+//  }< W - 2 * W / 5) &&
+//      m_ball->center.y + m_ball->r + m_ball->speed.y >= H)
+    m_game_play->add_score(0);
+    GamePlayController::Score res = m_game_play->get_score();
+
+    cout << "player left score =" << res.left << " : " << res.right << endl;
+//    restoreGame(s.history.back());
+    return (true);
+  }
+
+//  else if ((m_ball.center.x > 2 * W / 5 && m_ball.center.x < W - 2 * W / 5) &&
+//      m_ball.center.y - m_ball.r + m_ball.speed.y <= 0)
+//  {
+//    m_game_play->add_score(1);
+////    restoreGame(s.history.back());
+//    return (true);
+//  }
+  return (false);
+}
+
 /*
  *
   m_text_surface[0] = TTF_RenderText_Solid(m_window.getShrift(), "Player 1", m_text_color);
@@ -407,25 +449,3 @@ void Game::colision(std::shared_ptr<Player> player) {
   m_text_texture[0] = SDL_CreateTextureFromSurface(m_window.getRender(), m_text_surface[0]);
   m_text_texture[1] = SDL_CreateTextureFromSurface(m_window.getRender(), m_text_surface[1]);
  */
-
-/*
-void Game::handle_mouse_drag(SDL_Event e) {
-  if (e.type == SDL_MOUSEBUTTONDOWN) {
-    // Point where mouse button down occurs
-    SDL_Point p = {.x = e.motion.x, .y = e.motion.y};
-
-    if (SDL_PointInRect(&p, &m_sampleRect)) {
-      _inSampleRect = SDL_TRUE;
-    }
-  }
-
-  if (e.type == SDL_MOUSEBUTTONUP && _inSampleRect == SDL_TRUE) {
-    _inSampleRect = SDL_FALSE;
-  }
-
-  if (e.type == SDL_MOUSEMOTION && _inSampleRect == SDL_TRUE) {
-    m_sampleRect.x += e.motion.xrel;
-    m_sampleRect.y += e.motion.yrel;
-  }
-}
-*/

@@ -224,6 +224,33 @@ src/Game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Game.cpp.s
 .PHONY : src/Game.cpp.s
 
+src/GamePlayController.o: src/GamePlayController.cpp.o
+
+.PHONY : src/GamePlayController.o
+
+# target to build an object file
+src/GamePlayController.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/GamePlayController.cpp.o
+.PHONY : src/GamePlayController.cpp.o
+
+src/GamePlayController.i: src/GamePlayController.cpp.i
+
+.PHONY : src/GamePlayController.i
+
+# target to preprocess a source file
+src/GamePlayController.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/GamePlayController.cpp.i
+.PHONY : src/GamePlayController.cpp.i
+
+src/GamePlayController.s: src/GamePlayController.cpp.s
+
+.PHONY : src/GamePlayController.s
+
+# target to generate assembly for a file
+src/GamePlayController.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/GamePlayController.cpp.s
+.PHONY : src/GamePlayController.cpp.s
+
 src/Player.o: src/Player.cpp.o
 
 .PHONY : src/Player.o
@@ -296,6 +323,9 @@ help:
 	@echo "... src/Game.o"
 	@echo "... src/Game.i"
 	@echo "... src/Game.s"
+	@echo "... src/GamePlayController.o"
+	@echo "... src/GamePlayController.i"
+	@echo "... src/GamePlayController.s"
 	@echo "... src/Player.o"
 	@echo "... src/Player.i"
 	@echo "... src/Player.s"

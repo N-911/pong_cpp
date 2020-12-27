@@ -6,6 +6,7 @@ using std::cout;
 using std::endl;
 
 Ball::Ball(int side) {
+  m_sampleRect = new SDL_Rect();
   set_new_ball(side);
 }
 
@@ -23,7 +24,7 @@ void Ball::set_center() {
 
 
 Ball::~Ball() {
-
+ delete m_sampleRect;
 }
 void Ball::moving() {
   if (pos.x + speed.x < 0 || pos.x + SIZE_BALL + speed.x >= W)
@@ -57,22 +58,20 @@ bool Ball::is_movind() const {
   return speed.x != 0 || speed.y != 0;
 }
 void Ball::set_new_ball(int side) {
-  if (side) {
+  if (side == 0) {
     pos.x = W /2;
     pos.y = (H - SIZE_BALL ) / 2;
   }
-  else {
+  else if (side == 1){
     pos.x = W - 30;
     pos.y = (H - SIZE_BALL) / 2;
   }
-  m_sampleRect = new SDL_Rect();
   m_sampleRect->x = pos.x;
   m_sampleRect->y = pos.y;
   m_sampleRect->w = SIZE_BALL;
   m_sampleRect->h = SIZE_BALL;
-//  speed.x = -1.1;
-  speed.x = -20;
-  speed.y = -10;
+  speed.x = -30;
+  speed.y = 0;
   set_center();
   m_radius = SIZE_BALL / std::sqrt(2.0);
 }

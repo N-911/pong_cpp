@@ -39,7 +39,6 @@ Player::Player(int side) {
   m_delta = 5;
   m_radius = std::sqrt(PLAYER_H * PLAYER_H + PLAYER_W * PLAYER_W) / 2.0;
   m_score = 0;
-
   set_center();
 }
 
