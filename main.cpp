@@ -138,7 +138,7 @@ void setup_texture()
  */
 void setup_window_icon()
 {
-  SDL_Surface *iconSurface;
+  SDL_Surface *iconSurface = NULL;
   iconSurface = IMG_Load("resources/pong_icon.png");
 
   // The icon requires the window pointer NOT the renderer

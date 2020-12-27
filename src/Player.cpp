@@ -3,38 +3,32 @@
 #include "Player.h"
 #include "Window.h"
 #include <iostream>
+#include <cmath>
 
 using std::cout;
 using std::endl;
 
 Player::Player(int side) {
   cout << "consturctor Player" << endl;
-
+  m_sampleRect = new SDL_Rect();
   if (side == 0) {
     m_left_border = 0;
     m_right_border = W / 2;
     pos.x = 0;
-    pos.y = (H - 50 ) / 2;
-
-    m_sampleRect = new SDL_Rect();
+    pos.y = (H - PLAYER_H ) / 2;
     m_sampleRect->x = 0;
-    m_sampleRect->y = (H - 50) / 2;
-    m_sampleRect->w = 15;
-    m_sampleRect->h = 50;
+    m_sampleRect->y = (H - PLAYER_H) / 2;
   }
   else {
-    m_sampleRect = new SDL_Rect();
-    m_sampleRect->x = W - 15;
-    m_sampleRect->y = (H - 50) / 2;
-    m_sampleRect->w = 15;
-    m_sampleRect->h = 50;
-
+    m_sampleRect->x = W - PLAYER_W;
+    m_sampleRect->y = (H - PLAYER_H) / 2;
     m_left_border = W / 2;
     m_right_border = W;
-    pos.x = W;
-    pos.y = (H - 50 ) / 2;
+    pos.x = W - PLAYER_W;
+    pos.y = (H - PLAYER_H ) / 2;
   }
-
+  m_sampleRect->w = PLAYER_W;
+  m_sampleRect->h = PLAYER_H;
   speed.x = 0;
   speed.y = 0;
 
@@ -42,12 +36,18 @@ Player::Player(int side) {
   m_move_down = false;
   m_move_left = false;
   m_move_right = false;
-  m_delta = 15;
-  r = 32;
+  m_delta = 5;
+  m_radius = std::sqrt(PLAYER_H * PLAYER_H + PLAYER_W * PLAYER_W) / 2.0;
   m_score = 0;
-//  set_center();
-//  m_pixels = (unsigned int *)surf->pixels;
+
+  set_center();
 }
+
+void Player::set_center() {
+  center.x = pos.x + PLAYER_W / 2;
+  center.y = pos.y + PLAYER_H / 2;
+}
+
 
 Player::~Player()
 {
@@ -120,10 +120,7 @@ void Player::disable_move(int &key) {
   }
 }
 
-void Player::set_center() {
-  center.x = pos.x + r;
-  center.y = pos.y + r;
-}
+
 
 void Player::moving() {
 //  cout << "layer::moving() " << endl;
@@ -143,7 +140,7 @@ void Player::moving() {
     else
       m_sampleRect->y = H - 50;
   }
-//  set_center();
+  set_center();
 }
 
 

@@ -21,11 +21,11 @@ class Game {
  private:
   SDL_Event	m_ev;
   Window m_window;
-  SDL_Rect m_sampleRect;
+//  SDL_Rect m_sampleRect;
 
   std::shared_ptr<Ball> m_ball;
-  std::shared_ptr<Player> m_player1;
-  std::shared_ptr<Player> m_player2;
+  std::shared_ptr<Player> m_player_left;
+  std::shared_ptr<Player> m_player_right;
 
   SDL_Surface *m_score_surface;
   SDL_Texture *m_score_texture;
@@ -33,6 +33,7 @@ class Game {
   SDL_Texture *m_text_texture[2];
   SDL_Color m_text_color;
   SDL_bool m_loop;
+
   SDL_bool _inSampleRect = SDL_FALSE;
 
   unsigned int m_color[WIDTH * HEIGHT];
@@ -41,11 +42,11 @@ class Game {
   int	    m_number_pl;
 
   int show_menu();
+  void on_event(SDL_Event& event);
+
   void draw_score();
   bool check_goal() const;
-  void colision(std::shared_ptr<Player> m_player);
-//  void handle_mouse_drag(SDL_Event e);
-  void handle_keys(SDL_Event e);
+  void colision(std::shared_ptr<Player> player);
 };
 
 #endif //PONG_SRC_GAME_H_

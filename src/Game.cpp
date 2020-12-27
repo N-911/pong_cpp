@@ -6,20 +6,14 @@ using std::endl;
 
 Game::Game() {
   cout << "Game Constructor" << endl;
-
   m_run = true;
   m_loop = SDL_TRUE;
   m_number_pl = 2;
-  m_sampleRect.x = 200;
-  m_sampleRect.y = 200;
-  m_sampleRect.w = 15;
-  m_sampleRect.h = 50;
 
 //  m_number_pl = show_menu();
   m_text_color = (SDL_Color) {255, 255, 0, 255};
-
-  m_player1 = std::shared_ptr<Player>(new Player(0));
-  m_player2 = std::shared_ptr<Player>(new Player(1));
+  m_player_left = std::shared_ptr<Player>(new Player(0));
+  m_player_right = std::shared_ptr<Player>(new Player(1));
   m_ball  = std::shared_ptr<Ball>(new Ball(1));
 }
 
@@ -37,76 +31,61 @@ void Game::main_loop() {
 
   while (m_loop) {
     // Allow quiting with escape key by polling for pending events
-
     while (SDL_PollEvent(&event)) {
-      switch (event.type) {
-        case SDL_QUIT:m_loop = SDL_FALSE;
-          break;
-        case SDL_KEYDOWN:
-          if (event.key.keysym.sym == SDLK_ESCAPE) {
-            m_loop = SDL_FALSE;
-            break;
-          }
-          if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-              event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-            m_player1->set_move(event.key.keysym.sym);
-          }
-          if (m_number_pl == 2) {
-            if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
-                event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-              m_player2->set_move(event.key.keysym.sym);
-            }
-          }
-          break;
-
-        case SDL_KEYUP:
-          if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-              event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-            m_player1->disable_move(event.key.keysym.sym);
-          }
-          if (m_number_pl == 2) {
-            if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
-                event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-              m_player2->disable_move(event.key.keysym.sym);
-            }
-          }
-          break;
-        default:m_loop = SDL_TRUE;
-      }
-      m_player1->moving();
-      m_player2->moving();
+//    while (SDL_WaitEvent(&event)) {  // not working
+      on_event(event);
+    }
+      m_player_left->moving();
+      m_player_right->moving();
       m_ball->moving();
+      colision(m_player_left);
+      colision(m_player_right);
       draw();
-//      handle_mouse_drag(event);
-    }
   }
+  // clean
 }
 
-void Game::handle_keys(SDL_Event e) {
+void Game::on_event(SDL_Event &event) {
+  switch (event.type) {
+    case SDL_QUIT:m_loop = SDL_FALSE;
+      break;
+    case SDL_KEYDOWN:
+      if (event.key.keysym.sym == SDLK_ESCAPE) {
+        m_loop = SDL_FALSE;
+        break;
+      }
+      if (event.key.keysym.sym == SDLK_p) {
+        // new game
+        m_ball->set_new_ball(1);
+        m_ball->moving();
+      }
+      if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+          event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
+        m_player_left->set_move(event.key.keysym.sym);
+      }
+      if (m_number_pl == 2) {
+        if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
+            event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
+          m_player_right->set_move(event.key.keysym.sym);
+        }
+      }
+      break;
 
+    case SDL_KEYUP:
+      if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+          event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
+        m_player_left->disable_move(event.key.keysym.sym);
+      }
+      if (m_number_pl == 2) {
+        if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
+            event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
+          m_player_right->disable_move(event.key.keysym.sym);
+        }
+      }
+      break;
+    default:m_loop = SDL_TRUE;
+  }
 }
-
-/*
-void Game::handle_mouse_drag(SDL_Event e) {
-  if (e.type == SDL_MOUSEBUTTONDOWN) {
-    // Point where mouse button down occurs
-    SDL_Point p = {.x = e.motion.x, .y = e.motion.y};
-
-    if (SDL_PointInRect(&p, &m_sampleRect)) {
-      _inSampleRect = SDL_TRUE;
-    }
-  }
-
-  if (e.type == SDL_MOUSEBUTTONUP && _inSampleRect == SDL_TRUE) {
-    _inSampleRect = SDL_FALSE;
-  }
-
-  if (e.type == SDL_MOUSEMOTION && _inSampleRect == SDL_TRUE) {
-    m_sampleRect.x += e.motion.xrel;
-    m_sampleRect.y += e.motion.yrel;
-  }
-}
-*/
 
 int Game::show_menu() {
   SDL_Surface *screen = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, 0, 0, 0, 0);
@@ -223,8 +202,8 @@ void Game::draw() {
 
   // Render the sample rectangle
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 255, 1);
-  SDL_RenderFillRect(m_window.getRender(), m_player1->get_rect());
-  SDL_RenderFillRect(m_window.getRender(), m_player2->get_rect());
+  SDL_RenderFillRect(m_window.getRender(), m_player_left->get_rect());
+  SDL_RenderFillRect(m_window.getRender(), m_player_right->get_rect());
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 0, 1);
   SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
   // Render sample text
@@ -297,12 +276,12 @@ void Game::events() {
         }
         if (m_ev.key.keysym.sym == SDLK_UP || m_ev.key.keysym.sym == SDLK_DOWN ||
             m_ev.key.keysym.sym == SDLK_RIGHT || m_ev.key.keysym.sym == SDLK_LEFT) {
-          m_player1->set_move(m_ev.key.keysym.sym);
+          m_player_left->set_move(m_ev.key.keysym.sym);
         }
         if (m_number_pl == 2) {
           if (m_ev.key.keysym.sym == SDLK_w || m_ev.key.keysym.sym == SDLK_s ||
               m_ev.key.keysym.sym == SDLK_d || m_ev.key.keysym.sym == SDLK_a) {
-            m_player2->set_move(m_ev.key.keysym.sym);
+            m_player_right->set_move(m_ev.key.keysym.sym);
           }
         }
         break;
@@ -310,12 +289,12 @@ void Game::events() {
       case SDL_KEYUP:
         if (m_ev.key.keysym.sym == SDLK_UP || m_ev.key.keysym.sym == SDLK_DOWN ||
             m_ev.key.keysym.sym == SDLK_RIGHT || m_ev.key.keysym.sym == SDLK_LEFT) {
-          m_player1->disable_move(m_ev.key.keysym.sym);
+          m_player_left->disable_move(m_ev.key.keysym.sym);
         }
         if (m_number_pl == 2) {
           if (m_ev.key.keysym.sym == SDLK_w || m_ev.key.keysym.sym == SDLK_s ||
               m_ev.key.keysym.sym == SDLK_d || m_ev.key.keysym.sym == SDLK_a) {
-            m_player2->disable_move(m_ev.key.keysym.sym);
+            m_player_right->disable_move(m_ev.key.keysym.sym);
           }
         }
         break;
@@ -332,12 +311,85 @@ void Game::draw_score() {
 
 }
 
-void Game::colision(std::shared_ptr<Player> m_player) {
+void Game::colision(std::shared_ptr<Player> player) {
 
+  double Dx = m_ball->get_center().x - player->get_center().x;
+  double Dy = m_ball->get_center().y - player->get_center().y;
+  double d = sqrt(Dx * Dx + Dy * Dy);
+
+  if (d == 0)
+    d = 0.01;
+
+  if (d <= m_ball->get_radius() + player->get_radius()) {
+    double cos_a = Dx / d;
+    double sin_a = Dy / d;
+    double Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
+    double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
+
+    /* проверка на наложение */
+    double dt = (m_ball->get_radius() + player->get_radius() - d) / (Vn1 - Vn2);
+    if (dt > 0.6)
+      dt = 0.6;
+    else if (dt < -0.6)
+      dt = -0.6;
+
+    /*временный сдвиг*/
+    player->pos.x -= player->speed.x * dt;
+    player->pos.y -= player->speed.y * dt;
+//    player->set_center();
+
+
+    m_ball->pos.x -= m_ball->speed.x * dt;
+    m_ball->pos.y -= m_ball->speed.y * dt;
+//    m_ball.set_center();
+
+    /*перерасчет*/
+    Dx = m_ball->center.x - player->center.x;
+    Dy = m_ball->center.y - player->center.y;
+    d = sqrt(Dx * Dx + Dy * Dy);
+
+    if (d == 0)
+      d = 0.01;
+
+    cos_a = Dx / d;
+    sin_a = Dy / d;
+
+    Vn1 = player->speed.x * cos_a + player->speed.y * sin_a;
+    Vn2 = m_ball->speed.x * cos_a + m_ball->speed.y * sin_a;
+
+    double Vt2 = -m_ball->speed.x * sin_a + m_ball->speed.y * cos_a;
+
+    /*проверка направления ускорения*/
+    if (Vn2 < 0)
+      Vn2 = Vn1 - Vn2;
+    else
+      Vn2 += Vn1;
+
+    m_ball->speed.x = Vn2 * cos_a - Vt2 * sin_a;
+    m_ball->speed.y = Vn2 * sin_a + Vt2 * cos_a;
+
+    /*обратный сдвиг*/
+    player->pos.x += player->speed.x * dt;
+    player->pos.y += player->speed.y * dt;
+    player->set_center();
+
+    if (m_ball->speed.x > 50)
+      m_ball->speed.x = 50;
+    if (m_ball->speed.x < -50)
+      m_ball->speed.x = -50;
+    if (m_ball->speed.y > 50)
+      m_ball->speed.y = 50;
+    if (m_ball->speed.y < -50)
+      m_ball->speed.y = -50;
+
+    m_ball->pos.x += m_ball->speed.x * dt;
+    m_ball->pos.y += m_ball->speed.y * dt;
+    m_ball->set_center();
+
+//    if (!Mix_PlayingMusic())
+//      Mix_PlayMusic(window.bum, 0);
+  }
 }
-
-
-
 
 /*
  *
@@ -355,3 +407,25 @@ void Game::colision(std::shared_ptr<Player> m_player) {
   m_text_texture[0] = SDL_CreateTextureFromSurface(m_window.getRender(), m_text_surface[0]);
   m_text_texture[1] = SDL_CreateTextureFromSurface(m_window.getRender(), m_text_surface[1]);
  */
+
+/*
+void Game::handle_mouse_drag(SDL_Event e) {
+  if (e.type == SDL_MOUSEBUTTONDOWN) {
+    // Point where mouse button down occurs
+    SDL_Point p = {.x = e.motion.x, .y = e.motion.y};
+
+    if (SDL_PointInRect(&p, &m_sampleRect)) {
+      _inSampleRect = SDL_TRUE;
+    }
+  }
+
+  if (e.type == SDL_MOUSEBUTTONUP && _inSampleRect == SDL_TRUE) {
+    _inSampleRect = SDL_FALSE;
+  }
+
+  if (e.type == SDL_MOUSEMOTION && _inSampleRect == SDL_TRUE) {
+    m_sampleRect.x += e.motion.xrel;
+    m_sampleRect.y += e.motion.yrel;
+  }
+}
+*/

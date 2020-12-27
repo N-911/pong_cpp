@@ -11,16 +11,23 @@ class Ball {
   virtual ~Ball();
 
   void moving();
+  bool is_movind() const;
   SDL_Rect* get_rect() const {return m_sampleRect;}
+  Vec2i get_center() const { return center; }
+  Vec2f get_speed() const { return speed; }
+  double get_radius() const { return m_radius; }
+  void set_new_ball(int side);
 
- private:
-  SDL_Rect* m_sampleRect;
+  void set_center();
   Vec2i		pos;
   Vec2i		center;
   Vec2f		speed;
-  int		radius;
+  double    m_radius;  // radius circle around AABB ball
 
-  void set_center();
+ private:
+  SDL_Rect* m_sampleRect;
+
+
   void set_rect();
 
 };

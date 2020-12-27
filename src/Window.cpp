@@ -14,13 +14,10 @@ Window::Window() {
 
   m_surface = IMG_Load("resources/floor.png");
 
-
   if (m_surface == NULL) {
     cout << "[Error] Unable to load image : " << SDL_GetError() << endl;
     exit(0);
   }
-//===============
-
   // Load image at specified path
   m_surface = IMG_Load("resources/floor.png");
   if (m_surface == NULL) {
@@ -31,10 +28,8 @@ Window::Window() {
     if (m_texture == NULL) {
       printf("[Error] Unable to create texture : %s\n", SDL_GetError());
     }
-
     SDL_FreeSurface(m_surface);
   }
-
 
   m_text_color = (SDL_Color){255, 255, 0, 255};
 //  m_pixels = (unsigned int *)m_surface->pixels;
@@ -132,7 +127,7 @@ void Window::init_window_and_renderer()
 
 void Window::setup_window_icon()
 {
-  SDL_Surface *iconSurface;
+  SDL_Surface *iconSurface = NULL;
   iconSurface = IMG_Load("resources/pong_icon.png");
 
   // The icon requires the window pointer NOT the renderer
