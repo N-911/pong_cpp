@@ -1,17 +1,13 @@
-
-#include "Player.h"
-#include "Window.h"
+#include "GameObjects.h"
 #include <iostream>
-#include <cmath>
 
 using std::cout;
 using std::endl;
 
-Player::Player(int side) : GameObject(side) {
-  cout << "consturctor Player" << endl;
-
-  /*
+GameObject::GameObject (int side) {
+  cout << "consturctor GameObject" << endl;
   m_sampleRect = new SDL_Rect();
+  m_side = side;
 
   if (side == 0) {
     m_sampleRect->x = 0;
@@ -34,87 +30,83 @@ Player::Player(int side) : GameObject(side) {
 //  m_radius = std::sqrt(PLAYER_H * PLAYER_H + PLAYER_W * PLAYER_W) / 2.0;
   m_radius = PLAYER_W / 2;
   set_center();
-
-   */
 }
 
 
-
-Player::~Player()
-{
+void GameObject::set_center() {
+  center.x = m_sampleRect->x + PLAYER_W / 2;
+  center.y = m_sampleRect->y + PLAYER_H / 2;
 }
 
-/*
-void Player::set_move(int &key) {
+void GameObject::set_move(int &key) {
 
-    switch (key) {
-      case SDLK_UP:
-        m_move_up = true;
-        speed.y = -10;
-      case SDLK_w:
-        m_move_up = true;
-        speed.y = -10;
-        break;
-      case SDLK_DOWN:
-        m_move_down = true;
-        speed.y = 10;
-      case SDLK_s:
-        m_move_down = true;
-        speed.y = 10;
-        break;
-      case SDLK_RIGHT:
-        m_move_right = true;
-        speed.x = 10;
-      case SDLK_d:
-        m_move_right = true;
-        speed.x = 10;
-        break;
-      case SDLK_LEFT:
-        m_move_left = true;
-        speed.x = -10;
-      case SDLK_a:
-        m_move_left = true;
-        speed.x = -10;
-        break;
-    }
+  switch (key) {
+    case SDLK_UP:
+      m_move_up = true;
+      speed.y = -10;
+    case SDLK_w:
+      m_move_up = true;
+      speed.y = -10;
+      break;
+    case SDLK_DOWN:
+      m_move_down = true;
+      speed.y = 10;
+    case SDLK_s:
+      m_move_down = true;
+      speed.y = 10;
+      break;
+    case SDLK_RIGHT:
+      m_move_right = true;
+      speed.x = 10;
+    case SDLK_d:
+      m_move_right = true;
+      speed.x = 10;
+      break;
+    case SDLK_LEFT:
+      m_move_left = true;
+      speed.x = -10;
+    case SDLK_a:
+      m_move_left = true;
+      speed.x = -10;
+      break;
+  }
 }
 
-void Player::disable_move(int &key) {
+void GameObject::disable_move(int &key) {
   switch (key)
-    {
-      case SDLK_UP:
-        m_move_up = false;
+  {
+    case SDLK_UP:
+      m_move_up = false;
       speed.y = 0;
-      case SDLK_w:
-        m_move_up = false;
-      speed.y = 0;
-      break;
-      case SDLK_DOWN:
-        m_move_down = false;
-      speed.y = 0;
-      case SDLK_s:
-        m_move_down = false;
+    case SDLK_w:
+      m_move_up = false;
       speed.y = 0;
       break;
-      case SDLK_RIGHT:
-        m_move_right = false;
+    case SDLK_DOWN:
+      m_move_down = false;
+      speed.y = 0;
+    case SDLK_s:
+      m_move_down = false;
+      speed.y = 0;
+      break;
+    case SDLK_RIGHT:
+      m_move_right = false;
       speed.x = 0;
-      case SDLK_d:
-        m_move_right = false;
+    case SDLK_d:
+      m_move_right = false;
       speed.x = 0;
       break;
-      case SDLK_LEFT:
-        m_move_left = false;
+    case SDLK_LEFT:
+      m_move_left = false;
       speed.x = 0;
-      case SDLK_a:
-        m_move_left = false;
+    case SDLK_a:
+      m_move_left = false;
       speed.x = 0;
       break;
-    }
+  }
 }
 
-
-void Player::moving() {
+void GameObject::moving() {
 //  cout << "layer::moving() " << endl;
 //  cout << "before moving " << "x =" << m_sampleRect->x << "y =" << m_sampleRect->y;
 
@@ -134,15 +126,15 @@ void Player::moving() {
   }
   set_center();
 }
-void Player::move_start() {
+
+void GameObject::move_start() {
   if (m_side == 0) {
     m_sampleRect->x = 0;
   } else if (m_side == 1) {
     m_sampleRect->x = W - PLAYER_W;
   }
+  m_sampleRect->y = H / 2 - PLAYER_H / 2;
   speed.x = 0;
   speed.y = 0;
   set_center();
 }
-*/
-

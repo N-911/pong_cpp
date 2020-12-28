@@ -8,16 +8,11 @@ using std::endl;
 Window::Window() {
   cout << "Window Construtor" << endl;
   init_SDL();
-//  create_window();
-  setup_window_icon();
   init_window_and_renderer();
+  setup_window_icon();
 
-  m_surface = IMG_Load("resources/floor.png");
-
-  if (m_surface == NULL) {
-    cout << "[Error] Unable to load image : " << SDL_GetError() << endl;
-    exit(0);
-  }
+  m_surface = NULL;
+  m_texture = NULL;
   // Load image at specified path
   m_surface = IMG_Load("resources/floor.png");
   if (m_surface == NULL) {
@@ -30,9 +25,7 @@ Window::Window() {
     }
     SDL_FreeSurface(m_surface);
   }
-
   m_text_color = (SDL_Color){255, 255, 0, 255};
-//  m_pixels = (unsigned int *)m_surface->pixels;
 }
 
 
@@ -47,7 +40,6 @@ Window::~Window() {
 
   SDL_DestroyTexture(m_texture);
   SDL_DestroyRenderer(m_renderer);
-//  SDL_FreeSurface(m_surface);
   SDL_DestroyWindow(m_window);
   SDL_Quit();
 }
@@ -93,13 +85,13 @@ void Window::init_SDL() {
 void Window::create_window()
 {
   if (!(m_window = SDL_CreateWindow("PONG", SDL_WINDOWPOS_CENTERED,
-                                  SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN |
+                                  SDL_WINDOWPOS_CENTERED, W, H, SDL_WINDOW_SHOWN |
           SDL_WINDOW_OPENGL)))
   {
     cout << SDL_GetError() << endl;
     exit(1);
   } else {
-    cout << "Created Window and Renderer " << WIDTH << "x" << HEIGHT << endl;
+    cout << "Created Window and Renderer " << W << "x" << H << endl;
   }
   if (!(m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED)))
   {
@@ -107,7 +99,7 @@ void Window::create_window()
     exit(1);
   }
   if (!(m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888,
-                                    SDL_TEXTUREACCESS_STREAMING, WIDTH, HEIGHT)))
+                                    SDL_TEXTUREACCESS_STREAMING, W, H)))
   {
     cout << SDL_GetError() << endl;
     exit(1);
@@ -116,11 +108,11 @@ void Window::create_window()
 
 void Window::init_window_and_renderer()
 {
-  if (SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &m_window, &m_renderer) != 0) {
+  if (SDL_CreateWindowAndRenderer(W, H, SDL_WINDOW_SHOWN, &m_window, &m_renderer) != 0) {
     printf("[Error] Creating Window and Renderer: %s\n", SDL_GetError());
     exit(0);
   } else {
-    printf("Created Window and Renderer %dx%d\n", WIDTH,HEIGHT);
+    printf("Created Window and Renderer %dx%d\n", W, H);
   }
 }
 

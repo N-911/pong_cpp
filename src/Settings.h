@@ -6,12 +6,14 @@
 #define FPS 40
 #define W 840
 #define H 600
-#define WIDTH 840
-#define HEIGHT 600
+//#define WIDTH 840
+//#define HEIGHT 600
 #define BRAKING 0.991
-#define SIZE_BALL (16)
+#define BALL_SIZE (16)
 #define PLAYER_H (60)
 #define PLAYER_W (16)
+#define FONT_SIZE 32
+#define BALL_SPEED 22
 
 enum POSITION {
   LEFT = 0,
@@ -49,10 +51,10 @@ struct Box
 };
 
 
-struct Circle
-{
-  float radius;
-  Vec2i position;
+struct Circle {
+  int x;
+  int y;
+  int r;
 };
 
 #endif //PONG_SRC_SETTINGS_H_

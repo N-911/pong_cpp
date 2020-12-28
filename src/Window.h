@@ -6,7 +6,6 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
-
 class Window {
 
  public:
@@ -19,8 +18,6 @@ class Window {
  private:
   SDL_Window *m_window;
   SDL_Surface *m_surface;
-//  unsigned int *m_pixels;
-
   TTF_Font *m_shrift;
   SDL_Renderer *m_renderer;
   SDL_Texture *m_texture;
@@ -30,7 +27,6 @@ class Window {
 
   void init_SDL();
   void create_window();
-
   void init_window_and_renderer();
   void setup_window_icon();
 

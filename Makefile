@@ -197,6 +197,33 @@ src/Ball.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Ball.cpp.s
 .PHONY : src/Ball.cpp.s
 
+src/Bot.o: src/Bot.cpp.o
+
+.PHONY : src/Bot.o
+
+# target to build an object file
+src/Bot.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Bot.cpp.o
+.PHONY : src/Bot.cpp.o
+
+src/Bot.i: src/Bot.cpp.i
+
+.PHONY : src/Bot.i
+
+# target to preprocess a source file
+src/Bot.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Bot.cpp.i
+.PHONY : src/Bot.cpp.i
+
+src/Bot.s: src/Bot.cpp.s
+
+.PHONY : src/Bot.s
+
+# target to generate assembly for a file
+src/Bot.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Bot.cpp.s
+.PHONY : src/Bot.cpp.s
+
 src/Game.o: src/Game.cpp.o
 
 .PHONY : src/Game.o
@@ -223,6 +250,33 @@ src/Game.s: src/Game.cpp.s
 src/Game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Game.cpp.s
 .PHONY : src/Game.cpp.s
+
+src/GameObjects.o: src/GameObjects.cpp.o
+
+.PHONY : src/GameObjects.o
+
+# target to build an object file
+src/GameObjects.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/GameObjects.cpp.o
+.PHONY : src/GameObjects.cpp.o
+
+src/GameObjects.i: src/GameObjects.cpp.i
+
+.PHONY : src/GameObjects.i
+
+# target to preprocess a source file
+src/GameObjects.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/GameObjects.cpp.i
+.PHONY : src/GameObjects.cpp.i
+
+src/GameObjects.s: src/GameObjects.cpp.s
+
+.PHONY : src/GameObjects.s
+
+# target to generate assembly for a file
+src/GameObjects.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/GameObjects.cpp.s
+.PHONY : src/GameObjects.cpp.s
 
 src/GamePlayController.o: src/GamePlayController.cpp.o
 
@@ -320,9 +374,15 @@ help:
 	@echo "... src/Ball.o"
 	@echo "... src/Ball.i"
 	@echo "... src/Ball.s"
+	@echo "... src/Bot.o"
+	@echo "... src/Bot.i"
+	@echo "... src/Bot.s"
 	@echo "... src/Game.o"
 	@echo "... src/Game.i"
 	@echo "... src/Game.s"
+	@echo "... src/GameObjects.o"
+	@echo "... src/GameObjects.i"
+	@echo "... src/GameObjects.s"
 	@echo "... src/GamePlayController.o"
 	@echo "... src/GamePlayController.i"
 	@echo "... src/GamePlayController.s"
