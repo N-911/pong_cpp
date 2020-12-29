@@ -7,4 +7,3 @@ int main() {
   system ("leaks -q pong");
   return (0);
 }
-

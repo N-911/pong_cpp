@@ -1,6 +1,5 @@
 #ifndef PONG_SRC_PLAYER_H_
 #define PONG_SRC_PLAYER_H_
-//#include "Settings.h"
 #include "GameObjects.h"
 
 class Player : public GameObject {

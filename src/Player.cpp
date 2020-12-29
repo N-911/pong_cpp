@@ -1,4 +1,3 @@
-
 #include "Player.h"
 #include "Window.h"
 #include <iostream>
@@ -8,12 +7,7 @@ using std::cout;
 using std::endl;
 
 Player::Player(int side) : GameObject(side) {
-  cout << "consturctor Player" << endl;
 }
 
-
-
-Player::~Player()
-{
+Player::~Player() {
 }
-

@@ -10,8 +10,9 @@ class Window {
   virtual ~Window();
 
   TTF_Font *getShrift() const { return m_shrift; }
-  SDL_Renderer *getRender() const {return m_renderer; }
-  SDL_Texture& getTexture() {return *m_texture;}
+  SDL_Renderer *getRender() const { return m_renderer; }
+  SDL_Texture *getTexture() { return m_texture; }
+
  private:
   SDL_Window *m_window;
   SDL_Surface *m_surface;
@@ -19,14 +20,13 @@ class Window {
   SDL_Renderer *m_renderer;
   SDL_Texture *m_texture;
   SDL_Color m_text_color;
-  Mix_Music	*m_bum;
-  Mix_Music	*m_goal;
+//  Mix_Music	*m_bum;
+//  Mix_Music	*m_goal;
 
   void init_SDL();
   void create_window();
   void init_window_and_renderer();
   void setup_window_icon();
-
 };
 
 #endif //PONG_SRC_WINDOW_H_

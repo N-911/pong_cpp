@@ -14,33 +14,32 @@ class GameObject {
   bool m_move_down;
   bool m_move_left;
   bool m_move_right;
-  Vec2i		center;
-  Vec2f		speed;
-  double	m_radius;  // radius circle around AABB
-//  std::shared_ptr<SDL_Rect> m_sampleRect;
-  SDL_Rect* m_sampleRect;
+  Vec2i center;
+  Vec2f speed;
+  double m_radius;  // radius circle in AABB
+  SDL_Rect *m_sampleRect;
 
  public:
   // Constructors
   GameObject(int side);
-  GameObject(GameObject& other) = delete;
-  GameObject& operator=(GameObject& other) = delete;
-  GameObject(GameObject&& other) = delete;
-  GameObject& operator=(GameObject&& other) = delete;
+  GameObject(GameObject &other) = delete;
+  GameObject &operator=(GameObject &other) = delete;
+  GameObject(GameObject &&other) = delete;
+  GameObject &operator=(GameObject &&other) = delete;
 
   // Destructor
   ~GameObject() {
-//    delete m_sampleRect;
+    delete m_sampleRect;
   }
 
   virtual void set_center();
   virtual void set_move(int &key);
   virtual void moving();
-  virtual void moving(int x, int y)  { }
+  virtual void moving(std::shared_ptr<Ball> ball) {}
   virtual void move_start();
   virtual void disable_move(int &key);
-  void check_colision(std::shared_ptr<Ball>& m_ball);
-  SDL_Rect* get_rect() { return m_sampleRect;}
+  void check_colision(std::shared_ptr<Ball> m_ball);
+  SDL_Rect *get_rect() { return m_sampleRect; }
   Vec2i get_center() const { return center; }
   Vec2f get_speed() const { return speed; }
   double get_radius() const { return m_radius; }

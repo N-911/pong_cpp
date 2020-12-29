@@ -3,14 +3,12 @@
 
 #include "GameObjects.h"
 
-class Bot : public GameObject
-{
+class Bot : public GameObject {
  public:
   Bot(int side);
   virtual ~Bot() {}
 
-  void moving(int x, int y) override;
+  void moving(std::shared_ptr<Ball> ball) override;
 };
-
 
 #endif //PONG_SRC_BOT_H_

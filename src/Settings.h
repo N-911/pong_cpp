@@ -13,7 +13,8 @@
 #define PLAYER_H (32)
 #define PLAYER_W (32)
 #define FONT_SIZE 32
-//#define BALL_SPEED 22
+#define SCORE_BOURD_X (W / 2 + FONT_SIZE)
+#define SCORE_BOURD_Y (FONT_SIZE * 2)
 
 enum POSITION {
   LEFT = 0,
@@ -31,13 +32,6 @@ struct Vec2f
   float x;
   float y;
 };
-
-struct Box
-{
-  Vec2i min;  // верхний левый угол
-  Vec2i max;  // нижний правый угол
-};
-
 
 struct Circle {
   int x;

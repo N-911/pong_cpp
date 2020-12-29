@@ -140,7 +140,7 @@ void GameObject::move_start() {
   set_center();
 }
 
-void GameObject::check_colision(std::shared_ptr<Ball>& m_ball) {
+void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 
     double Dx = m_ball->get_center().x - this->get_center().x;
     double Dy = m_ball->get_center().y - this->get_center().y;

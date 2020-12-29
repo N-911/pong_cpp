@@ -1,6 +1,5 @@
 #include "Game.h"
 #include <iostream>
-#include "Bot.h"
 
 using std::cout;
 using std::endl;
@@ -12,15 +11,17 @@ Game::Game() {
   m_game_play = new GamePlayController();
 
   m_number_pl = show_menu();
-
   m_text_color.r = 255;
   m_text_color.g = 255;
   m_text_color.b = 0;
   m_text_color.a = 255;
 
-//  m_player_left = std::shared_ptr<Player>(new Player(0));
-  m_player_left = new Player(0);
+  m_score_board.w = 100;
+  m_score_board.h = FONT_SIZE;
+  m_score_board.x = SCORE_BOURD_X - m_score_board.w;
+  m_score_board.y = SCORE_BOURD_Y - m_score_board.h;
 
+  m_player_left = new Player(0);
   if (m_number_pl == 1) {
     m_current_player_right = new Bot(1);
   } else {
@@ -35,7 +36,6 @@ Game::~Game() {
   delete m_game_play;
   delete m_player_left;
   delete m_current_player_right;
-
 }
 
 int Game::show_menu() {
@@ -66,8 +66,7 @@ int Game::show_menu() {
   while (1) {
     while (SDL_PollEvent(&m_ev)) {
       switch (m_ev.type) {
-        case SDL_QUIT:
-          SDL_FreeSurface(menus[0]);
+        case SDL_QUIT:SDL_FreeSurface(menus[0]);
           SDL_FreeSurface(menus[1]);
           SDL_FreeSurface(screen);
           SDL_DestroyTexture(texture);
@@ -135,7 +134,6 @@ int Game::show_menu() {
 }
 
 void Game::game_loop() {
-  cout << "Game main_loop" << endl;
   SDL_Event event;
 
   static int lastTime = 0;
@@ -154,7 +152,6 @@ void Game::game_loop() {
     }
     render();
   }
-  // clean
 }
 
 void Game::on_event(SDL_Event &event) {
@@ -171,12 +168,10 @@ void Game::on_event(SDL_Event &event) {
         break;
       }
 
-      if (event.key.keysym.sym == SDLK_p) {  // new ball
-        // new game
+      if (event.key.keysym.sym == SDLK_p) {  // new ball for testing
         m_ball->set_new_ball(1);
         m_ball->moving();
       }
-
       if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
           event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
         m_player_left->set_move(event.key.keysym.sym);
@@ -191,7 +186,7 @@ void Game::on_event(SDL_Event &event) {
     case SDL_KEYUP:
       if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
           event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-          m_player_left->disable_move(event.key.keysym.sym);
+        m_player_left->disable_move(event.key.keysym.sym);
       }
       if (m_number_pl == 2) {
         if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
@@ -205,25 +200,21 @@ void Game::on_event(SDL_Event &event) {
 }
 
 void Game::update() {
-
   m_player_left->moving();
   if (m_number_pl == 2)
     m_current_player_right->moving();
-  else {
-    m_current_player_right->moving(m_ball->get_center().x, m_ball->get_center().y);
-//      cout << " bot x =" << m_current_player_right->get_rect().x << " y = " << m_current_player_right->get_rect().y << endl;
-  }
+  else
+    m_current_player_right->moving(m_ball);
   m_ball->moving();
 
   // reset all position
   if (int win_side = check_goal(); win_side != -1) {
-      m_player_left->move_start();
-      m_current_player_right->move_start();
-      m_ball->set_new_ball(win_side);
-  }
-  else {
+    m_player_left->move_start();
+    m_current_player_right->move_start();
+    m_ball->set_new_ball(win_side);
+  } else {
     m_player_left->check_colision(m_ball);
-      m_current_player_right->check_colision(m_ball);
+    m_current_player_right->check_colision(m_ball);
   }
 }
 
@@ -236,63 +227,38 @@ void Game::render() {
     SDL_Delay((1000 / 60) - timerFPS);
   }
 
-  // Blank out the renderer with all black
   SDL_SetRenderDrawColor(m_window.getRender(), 0, 0, 0, 0);
   SDL_RenderClear(m_window.getRender());
-
-  // Note that all render copys are order specific.
-
-  SDL_RenderCopy(m_window.getRender(), &m_window.getTexture(), NULL, NULL);
-
-  // Render the sample rectangle
+  SDL_RenderCopy(m_window.getRender(), m_window.getTexture(), NULL, NULL);
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 255, 1);
   SDL_RenderFillRect(m_window.getRender(), m_player_left->get_rect());
   SDL_RenderFillRect(m_window.getRender(), m_current_player_right->get_rect());
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 0, 0, 1);
   SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
-  // Render sample text
-//  SDL_RenderCopy(m_window.getRender(), _headerText, NULL, &_headerTextRect);
-
   draw_score();
-
-  // Present to renderer
   SDL_RenderPresent(m_window.getRender());
-//  SDL_Delay(10);
 }
 
-
 void Game::draw_score() {
-  int x = W / 2 + FONT_SIZE;
-  int y = FONT_SIZE * 2;
-
   std::string text = "Score ";
   text += std::to_string(m_game_play->get_score().left);
-  text +=  " : ";
+  text += " : ";
   text += std::to_string(m_game_play->get_score().right);
-
   m_score_surface = TTF_RenderText_Solid(m_window.getShrift(), text.c_str(), m_text_color);
   m_score_texture = SDL_CreateTextureFromSurface(m_window.getRender(), m_score_surface);
-  m_score_board.w = m_score_surface->w;
-  m_score_board.h = m_score_surface->h;
-  m_score_board.x = x - m_score_board.w;
-  m_score_board.y = y - m_score_board.h;
   SDL_RenderCopy(m_window.getRender(), m_score_texture, NULL, &m_score_board);
   SDL_DestroyTexture(m_score_texture);
   SDL_FreeSurface(m_score_surface);
 }
 
-
-
 /*return  0 left side goal, 1 - right side goal, -1 - no goal */
-int Game::check_goal()
-{
-  if (m_ball->get_rect()->x  + BALL_SIZE >= W) {
+int Game::check_goal() {
+  if (m_ball->get_rect()->x + BALL_SIZE >= W) {
     m_game_play->add_score(0);
     GamePlayController::Score res = m_game_play->get_score();
     cout << "player left goal score =" << res.left << " : " << res.right << endl;
     return 1;
-  }
-  else if (m_ball->get_rect()->x <= 0) {
+  } else if (m_ball->get_rect()->x <= 0) {
     m_game_play->add_score(1);
     GamePlayController::Score res = m_game_play->get_score();
     cout << "player right goal score = " << res.left << " : " << res.right << endl;
@@ -300,173 +266,3 @@ int Game::check_goal()
   }
   return -1;
 }
-
-
-/*
-void Game::colision2(std::shared_ptr<Bot> player) {
-  double Dx = m_ball->get_center().x - player->get_center().x;
-  double Dy = m_ball->get_center().y - player->get_center().y;
-  double d = sqrt(Dx * Dx + Dy * Dy);
-
-  if (d == 0)
-    d = 0.01;
-
-  if (d <= m_ball->get_radius() + player->get_radius()) {
-    double cos_a = Dx / d;
-    double sin_a = Dy / d;
-    double Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
-    double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
-
-    // проверка на наложение
-    double dt = (m_ball->get_radius() + player->get_radius() - d) / (Vn1 - Vn2);
-    if (dt > 0.6)
-      dt = 0.6;
-    else if (dt < -0.6)
-      dt = -0.6;
-
-    //временный сдвиг
-    player->get_rect()->x -= player->get_speed().x * dt;
-    player->get_rect()->y -= player->get_speed().y * dt;
-    player->set_center();
-
-
-    m_ball->pos.x -= m_ball->speed.x * dt;
-    m_ball->pos.y -= m_ball->speed.y * dt;
-//    m_ball.set_center();
-
-    //перерасчет
-    Dx = m_ball->center.x - player->get_center().x;
-    Dy = m_ball->center.y - player->get_center().y;
-    d = sqrt(Dx * Dx + Dy * Dy);
-
-    if (d == 0)
-      d = 0.01;
-
-    cos_a = Dx / d;
-    sin_a = Dy / d;
-
-    Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
-    Vn2 = m_ball->speed.x * cos_a + m_ball->speed.y * sin_a;
-
-    double Vt2 = -m_ball->speed.x * sin_a + m_ball->speed.y * cos_a;
-
-    //проверка направления ускорения
-    if (Vn2 < 0)
-      Vn2 = Vn1 - Vn2;
-    else
-      Vn2 += Vn1;
-
-    m_ball->speed.x = Vn2 * cos_a - Vt2 * sin_a;
-    m_ball->speed.y = Vn2 * sin_a + Vt2 * cos_a;
-
-    //обратный сдвиг
-    player->get_rect()->x += player->get_speed().x * dt;
-    player->get_rect()->y += player->get_speed().y * dt;
-    player->set_center();
-
-    if (m_ball->speed.x > 50)
-      m_ball->speed.x = 50;
-    if (m_ball->speed.x < -50)
-      m_ball->speed.x = -50;
-    if (m_ball->speed.y > 50)
-      m_ball->speed.y = 50;
-    if (m_ball->speed.y < -50)
-      m_ball->speed.y = -50;
-
-    m_ball->pos.x += m_ball->speed.x * dt;
-    m_ball->pos.y += m_ball->speed.y * dt;
-    m_ball->set_center();
-
-//    if (!Mix_PlayingMusic())
-//      Mix_PlayMusic(window.bum, 0);
-
-  }
-}
-*/
-
-
-/*
-void Game::colision(Player* player) {
-
-  double Dx = m_ball->get_center().x - player->get_center().x;
-  double Dy = m_ball->get_center().y - player->get_center().y;
-  double d = sqrt(Dx * Dx + Dy * Dy);
-
-  if (d == 0)
-    d = 0.01;
-
-  if (d <= m_ball->get_radius() + player->get_radius()) {
-    double cos_a = Dx / d;
-    double sin_a = Dy / d;
-    double Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
-    double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
-
-    // проверка на наложение
-    double dt = (m_ball->get_radius() + player->get_radius() - d) / (Vn1 - Vn2);
-    if (dt > 0.6)
-      dt = 0.6;
-    else if (dt < -0.6)
-      dt = -0.6;
-
-//    //временный сдвиг
-//    player->get_rect()->x -= player->get_speed().x * dt;
-//    player->get_rect()->y -= player->get_speed().y * dt;
-//    player->set_center();
-
-
-    m_ball->pos.x -= m_ball->speed.x * dt;
-    m_ball->pos.y -= m_ball->speed.y * dt;
-//    m_ball.set_center();
-//    //перерасчет
-//    Dx = m_ball->center.x - player->get_center().x;
-//    Dy = m_ball->center.y - player->get_center().y;
-//    d = sqrt(Dx * Dx + Dy * Dy);
-
-//    if (d == 0)
-//      d = 0.01;
-//
-//    cos_a = Dx / d;
-//    sin_a = Dy / d;
-
-//    Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
-//    Vn2 = m_ball->speed.x * cos_a + m_ball->speed.y * sin_a;
-//
-//    double Vt2 = -m_ball->speed.x * sin_a + m_ball->speed.y * cos_a;
-
-    //проверка направления ускорения
-//    if (Vn2 < 0)
-//      Vn2 = Vn1 - Vn2;
-//    else
-//      Vn2 += Vn1;
-//
-//    m_ball->speed.x = Vn2 * cos_a - Vt2 * sin_a;
-//    m_ball->speed.y = Vn2 * sin_a + Vt2 * cos_a;
-//
-//    //обратный сдвиг
-//    player->get_rect()->x += player->get_speed().x * dt;
-//    player->get_rect()->y += player->get_speed().y * dt;
-//    player->set_center();
-
-    if (m_ball->speed.x > 50)
-      m_ball->speed.x = 50;
-    if (m_ball->speed.x < -50)
-      m_ball->speed.x = -50;
-    if (m_ball->speed.y > 50)
-      m_ball->speed.y = 50;
-    if (m_ball->speed.y < -50)
-      m_ball->speed.y = -50;
-
-    m_ball->pos.x += m_ball->speed.x * dt;
-    m_ball->pos.y += m_ball->speed.y * dt;
-    m_ball->set_center();
-
-//    if (!Mix_PlayingMusic())
-//      Mix_PlayMusic(window.bum, 0);
-
-  }
-
-}
-*/
-
-
-
