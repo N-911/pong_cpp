@@ -142,7 +142,6 @@ void Game::game_loop() {
       fps = frameCount;
       frameCount = 0;
     }
-    // Allow quiting with escape key by polling for pending events
     while (SDL_PollEvent(&event)) {
 //    while (SDL_WaitEvent(&event)) {  // not working
       on_event(event);
@@ -209,7 +208,7 @@ void Game::update() {
   else {
 //    m_player_right->set_move(m_ball->center.y);
 //    m_player_right->disable_move(m_ball->center.x);
-      m_player_right_bot->move_bot(m_ball->center.x, m_ball->center.y);
+      m_player_right_bot->move_bot(m_ball->get_center().x, m_ball->get_center().y);
   }
   m_ball->moving();
 
@@ -287,13 +286,13 @@ bool Game::check_goal()
 {
   cout << " check_goal" << endl;
 
-  if (m_ball->pos.x  + PLAYER_W >= W) {
+  if (m_ball->get_rect()->x  + PLAYER_W >= W) {
     m_game_play->add_score(0);
     GamePlayController::Score res = m_game_play->get_score();
     cout << "player left score =" << res.left << " : " << res.right << endl;
     return (true);
   }
-  else if (m_ball->pos.x <= 0 ) {
+  else if (m_ball->get_rect()->x <= 0 ) {
     m_game_play->add_score(1);
     GamePlayController::Score res = m_game_play->get_score();
     cout << "player right score = " << res.left << " : " << res.right << endl;

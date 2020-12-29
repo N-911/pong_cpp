@@ -166,13 +166,14 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 //    player->get_rect()->y -= player->get_speed().y * dt;
 //    player->set_center();
 
-    m_ball->pos.x -= m_ball->speed.x * dt;
-    m_ball->pos.y -= m_ball->speed.y * dt;
-    m_ball->set_center();
+    m_ball->set_rect_x( m_ball->get_rect()->x - m_ball->get_speed().x * dt);
+    m_ball->set_rect_y( m_ball->get_rect()->y - m_ball->get_speed().y * dt);
+
+//    m_ball->set_center();
 
     //перерасчет
-    Dx = m_ball->center.x - this->get_center().x;
-    Dy = m_ball->center.y - this->get_center().y;
+    Dx = m_ball->get_center().x - this->get_center().x;
+    Dy = m_ball->get_center().y - this->get_center().y;
     d = sqrt(Dx * Dx + Dy * Dy);
 
     if (d == 0)
@@ -182,9 +183,9 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
     sin_a = Dy / d;
 
     Vn1 = this->get_speed().x * cos_a + this->get_speed().y * sin_a;
-    Vn2 = m_ball->speed.x * cos_a + m_ball->speed.y * sin_a;
+    Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
 
-    double Vt2 = -m_ball->speed.x * sin_a + m_ball->speed.y * cos_a;
+    double Vt2 = -m_ball->get_speed().x * sin_a + m_ball->get_speed().y * cos_a;
 
 //        проверка направления ускорения
     if (Vn2 < 0)
@@ -192,25 +193,25 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
     else
       Vn2 += Vn1;
 
-    m_ball->speed.x = Vn2 * cos_a - Vt2 * sin_a;
-    m_ball->speed.y = Vn2 * sin_a + Vt2 * cos_a;
+    m_ball->set_speed_x(Vn2 * cos_a - Vt2 * sin_a);
+    m_ball->set_speed_y(Vn2 * sin_a + Vt2 * cos_a);
 
     //обратный сдвиг
         this->get_rect()->x += this->get_speed().x * dt;
         this->get_rect()->y += this->get_speed().y * dt;
         this->set_center();
 
-        if (m_ball->speed.x > 50)
-            m_ball->speed.x = 50;
-        if (m_ball->speed.x < -50)
-            m_ball->speed.x = -50;
-        if (m_ball->speed.y > 50)
-            m_ball->speed.y = 50;
-        if (m_ball->speed.y < -50)
-            m_ball->speed.y = -50;
+        if (m_ball->get_speed().x > 50)
+            m_ball->set_speed_x(50);
+        if (m_ball->get_speed().x < -50)
+            m_ball->set_speed_x(-50);
+        if (m_ball->get_speed().y > 50)
+            m_ball->set_speed_y(50);
+        if (m_ball->get_speed().y < -50)
+            m_ball->set_speed_y(-50);
 
-        m_ball->pos.x += m_ball->speed.x * dt;
-        m_ball->pos.y += m_ball->speed.y * dt;
+        m_ball->get_rect()->x += m_ball->get_speed().x * dt;
+        m_ball->get_rect()->y += m_ball->get_speed().y * dt;
         m_ball->set_center();
 
 //    if (!Mix_PlayingMusic())

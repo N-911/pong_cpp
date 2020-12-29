@@ -19,16 +19,16 @@ class Ball {
   void set_new_ball(int side);
 
   void set_center();
-  Vec2i		pos;
+  void set_rect_x(int x);
+  void set_rect_y(int y);
+
+  void set_speed_x(int x);
+  void set_speed_y(int y);
+ private:
+  SDL_Rect* m_sampleRect;
   Vec2i		center;
   Vec2f		speed;
   double    m_radius;  // radius circle around AABB ball
-
- private:
-  SDL_Rect* m_sampleRect;
-
-
-  void set_rect();
 
 };
 
