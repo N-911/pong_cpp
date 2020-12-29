@@ -13,6 +13,7 @@ class GamePlayController {
   virtual ~GamePlayController();
   void add_score(int side);
   void check_win();
+
   Score get_score() const { return {m_score_left, m_score_right}; }
 
  private:

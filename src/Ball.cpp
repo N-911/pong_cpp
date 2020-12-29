@@ -66,16 +66,17 @@ void Ball::set_new_ball(int side) {
   if (side == 0) {
     pos.x = W /2;
     pos.y = (H - BALL_SIZE ) / 2;
+    speed.x = 5;
   }
   else if (side == 1){
     pos.x = W - 30;
     pos.y = (H - BALL_SIZE) / 2;
+    speed.x = -5;
   }
   m_sampleRect->x = pos.x;
   m_sampleRect->y = pos.y;
   m_sampleRect->w = BALL_SIZE;
   m_sampleRect->h = BALL_SIZE;
-  speed.x = -5;
   speed.y = 0;
   set_center();
   m_radius = BALL_SIZE / std::sqrt(2.0);

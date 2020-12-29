@@ -1,6 +1,9 @@
 #ifndef PONG_SRC_GAMEOBJECTS_H_
 #define PONG_SRC_GAMEOBJECTS_H_
+
+#include <memory>
 #include "Settings.h"
+#include "Ball.h"
 
 class GameObject {
 
@@ -32,6 +35,7 @@ class GameObject {
   virtual void moving();
   virtual void move_start();
   virtual void disable_move(int &key);
+  void check_colision(std::shared_ptr<Ball> m_ball);
   SDL_Rect* get_rect() { return m_sampleRect;}
   Vec2i get_center() const { return center; }
   Vec2f get_speed() const { return speed; }

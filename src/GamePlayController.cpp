@@ -38,3 +38,6 @@ void GamePlayController::reset_score() {
 GamePlayController::~GamePlayController() {
 
 }
+
+
+

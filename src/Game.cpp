@@ -11,23 +11,22 @@ Game::Game() {
   m_number_pl = 1;
   m_game_play = new GamePlayController();
 
-//  m_number_pl = show_menu();
+  m_number_pl = show_menu();
   m_text_color.r = 255;
   m_text_color.g = 255;
   m_text_color.b = 0;
   m_text_color.a = 255;
 
-  m_player_left = std::shared_ptr<Player>(new Player(0));
+//  m_player_left = std::shared_ptr<Player>(new Player(0));
+  m_player_left =  new Player(0);
 
   if (m_number_pl == 1) {
-//    m_player_right = std::shared_ptr<GameObject>(new Bot(1));
-    m_player_right_bot2 = std::shared_ptr<Bot>(new Bot(1));
+      m_player_right_bot = new Bot(1);
   } else {
-    m_player_right = std::shared_ptr<GameObject>(new Player(1));
+    m_player_right = new Player(1);
   }
   m_ball  = std::shared_ptr<Ball>(new Ball(1));
   m_pause = false;
-
 }
 
 Game::~Game() {
@@ -210,16 +209,27 @@ void Game::update() {
   else {
 //    m_player_right->set_move(m_ball->center.y);
 //    m_player_right->disable_move(m_ball->center.x);
-    m_player_right_bot2->move_bot(m_ball->center.x, m_ball->center.y);
+      m_player_right_bot->move_bot(m_ball->center.x, m_ball->center.y);
   }
   m_ball->moving();
 
+  // reset all position
   if (check_goal()) {
     m_player_left->move_start();
-    m_player_right_bot2->move_start();
+    if (m_number_pl == 2) {
+        m_player_right->move_start();
+    }
+    else
+        m_player_right_bot->move_start();
+
+    m_ball->set_new_ball(0);
   }
-  colision(m_player_left);
-  colision2(m_player_right_bot2);
+
+  m_player_left->check_colision(m_ball);
+  if (m_number_pl == 2) {
+      m_player_right->check_colision(m_ball);
+  } else
+      m_player_right->check_colision(m_ball);
 }
 
 void Game::render() {
@@ -227,7 +237,7 @@ void Game::render() {
 
   frameCount++;
   int timerFPS = SDL_GetTicks() - lastFrame;
-  if(timerFPS < (1000 / 60)) {
+  if (timerFPS < (1000 / 60)) {
     SDL_Delay((1000 / 60) - timerFPS);
   }
 
@@ -242,8 +252,8 @@ void Game::render() {
   // Render the sample rectangle
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 255, 1);
   SDL_RenderFillRect(m_window.getRender(), m_player_left->get_rect());
-  SDL_RenderFillRect(m_window.getRender(), m_player_right_bot2->get_rect());
-  SDL_SetRenderDrawColor(m_window.getRender(), 0, 0, 0, 1);
+  SDL_RenderFillRect(m_window.getRender(), m_player_right->get_rect());
+  SDL_SetRenderDrawColor(m_window.getRender(), 255, 0, 0, 1);
   SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
   // Render sample text
 //  SDL_RenderCopy(m_window.getRender(), _headerText, NULL, &_headerTextRect);
@@ -254,10 +264,6 @@ void Game::render() {
 //  SDL_Delay(10);
 }
 
-
-
-void Game::Exit() {
-}
 
 void Game::draw_score(int x, int y) {
   std::string text = "Score ";
@@ -274,92 +280,12 @@ void Game::draw_score(int x, int y) {
   m_score_texture = NULL;
 }
 
-void Game::colision(std::shared_ptr<Player> player) {
 
 
-  double Dx = m_ball->get_center().x - player->get_center().x;
-  double Dy = m_ball->get_center().y - player->get_center().y;
-  double d = sqrt(Dx * Dx + Dy * Dy);
-
-  if (d == 0)
-    d = 0.01;
-
-  if (d <= m_ball->get_radius() + player->get_radius()) {
-    double cos_a = Dx / d;
-    double sin_a = Dy / d;
-    double Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
-    double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
-
-    // проверка на наложение
-    double dt = (m_ball->get_radius() + player->get_radius() - d) / (Vn1 - Vn2);
-    if (dt > 0.6)
-      dt = 0.6;
-    else if (dt < -0.6)
-      dt = -0.6;
-
-    //временный сдвиг
-    player->get_rect()->x -= player->get_speed().x * dt;
-    player->get_rect()->y -= player->get_speed().y * dt;
-    player->set_center();
-
-
-    m_ball->pos.x -= m_ball->speed.x * dt;
-    m_ball->pos.y -= m_ball->speed.y * dt;
-//    m_ball.set_center();
-
-    //перерасчет
-    Dx = m_ball->center.x - player->get_center().x;
-    Dy = m_ball->center.y - player->get_center().y;
-    d = sqrt(Dx * Dx + Dy * Dy);
-
-    if (d == 0)
-      d = 0.01;
-
-    cos_a = Dx / d;
-    sin_a = Dy / d;
-
-    Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
-    Vn2 = m_ball->speed.x * cos_a + m_ball->speed.y * sin_a;
-
-    double Vt2 = -m_ball->speed.x * sin_a + m_ball->speed.y * cos_a;
-
-    //проверка направления ускорения
-    if (Vn2 < 0)
-      Vn2 = Vn1 - Vn2;
-    else
-      Vn2 += Vn1;
-
-    m_ball->speed.x = Vn2 * cos_a - Vt2 * sin_a;
-    m_ball->speed.y = Vn2 * sin_a + Vt2 * cos_a;
-
-    //обратный сдвиг
-    player->get_rect()->x += player->get_speed().x * dt;
-    player->get_rect()->y += player->get_speed().y * dt;
-    player->set_center();
-
-    if (m_ball->speed.x > 50)
-      m_ball->speed.x = 50;
-    if (m_ball->speed.x < -50)
-      m_ball->speed.x = -50;
-    if (m_ball->speed.y > 50)
-      m_ball->speed.y = 50;
-    if (m_ball->speed.y < -50)
-      m_ball->speed.y = -50;
-
-    m_ball->pos.x += m_ball->speed.x * dt;
-    m_ball->pos.y += m_ball->speed.y * dt;
-    m_ball->set_center();
-
-//    if (!Mix_PlayingMusic())
-//      Mix_PlayMusic(window.bum, 0);
-
-  }
-
-}
 
 bool Game::check_goal()
 {
-//  cout << " check_goal" << endl;
+  cout << " check_goal" << endl;
 
   if (m_ball->pos.x  + PLAYER_W >= W) {
     m_game_play->add_score(0);
@@ -375,6 +301,9 @@ bool Game::check_goal()
   }
   return (false);
 }
+
+
+/*
 void Game::colision2(std::shared_ptr<Bot> player) {
   double Dx = m_ball->get_center().x - player->get_center().x;
   double Dy = m_ball->get_center().y - player->get_center().y;
@@ -454,7 +383,91 @@ void Game::colision2(std::shared_ptr<Bot> player) {
 
   }
 }
+*/
 
+
+/*
+void Game::colision(Player* player) {
+
+  double Dx = m_ball->get_center().x - player->get_center().x;
+  double Dy = m_ball->get_center().y - player->get_center().y;
+  double d = sqrt(Dx * Dx + Dy * Dy);
+
+  if (d == 0)
+    d = 0.01;
+
+  if (d <= m_ball->get_radius() + player->get_radius()) {
+    double cos_a = Dx / d;
+    double sin_a = Dy / d;
+    double Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
+    double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
+
+    // проверка на наложение
+    double dt = (m_ball->get_radius() + player->get_radius() - d) / (Vn1 - Vn2);
+    if (dt > 0.6)
+      dt = 0.6;
+    else if (dt < -0.6)
+      dt = -0.6;
+
+//    //временный сдвиг
+//    player->get_rect()->x -= player->get_speed().x * dt;
+//    player->get_rect()->y -= player->get_speed().y * dt;
+//    player->set_center();
+
+
+    m_ball->pos.x -= m_ball->speed.x * dt;
+    m_ball->pos.y -= m_ball->speed.y * dt;
+//    m_ball.set_center();
+//    //перерасчет
+//    Dx = m_ball->center.x - player->get_center().x;
+//    Dy = m_ball->center.y - player->get_center().y;
+//    d = sqrt(Dx * Dx + Dy * Dy);
+
+//    if (d == 0)
+//      d = 0.01;
+//
+//    cos_a = Dx / d;
+//    sin_a = Dy / d;
+
+//    Vn1 = player->get_speed().x * cos_a + player->get_speed().y * sin_a;
+//    Vn2 = m_ball->speed.x * cos_a + m_ball->speed.y * sin_a;
+//
+//    double Vt2 = -m_ball->speed.x * sin_a + m_ball->speed.y * cos_a;
+
+    //проверка направления ускорения
+//    if (Vn2 < 0)
+//      Vn2 = Vn1 - Vn2;
+//    else
+//      Vn2 += Vn1;
+//
+//    m_ball->speed.x = Vn2 * cos_a - Vt2 * sin_a;
+//    m_ball->speed.y = Vn2 * sin_a + Vt2 * cos_a;
+//
+//    //обратный сдвиг
+//    player->get_rect()->x += player->get_speed().x * dt;
+//    player->get_rect()->y += player->get_speed().y * dt;
+//    player->set_center();
+
+    if (m_ball->speed.x > 50)
+      m_ball->speed.x = 50;
+    if (m_ball->speed.x < -50)
+      m_ball->speed.x = -50;
+    if (m_ball->speed.y > 50)
+      m_ball->speed.y = 50;
+    if (m_ball->speed.y < -50)
+      m_ball->speed.y = -50;
+
+    m_ball->pos.x += m_ball->speed.x * dt;
+    m_ball->pos.y += m_ball->speed.y * dt;
+    m_ball->set_center();
+
+//    if (!Mix_PlayingMusic())
+//      Mix_PlayMusic(window.bum, 0);
+
+  }
+
+}
+*/
 
 
 

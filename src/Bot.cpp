@@ -81,8 +81,6 @@ void Bot::moving() {
 
 
 void Bot::move_bot(int x, int y) {
-//
-  set_center();
     if (x + BALL_SIZE / 2 < H / 2) {
       return;
     }
@@ -91,4 +89,5 @@ void Bot::move_bot(int x, int y) {
     } else {
       m_sampleRect->y -= m_delta;
     }
+      set_center();
 }

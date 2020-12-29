@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef PONG_SRC_SETTINGS_H_
 #define PONG_SRC_SETTINGS_H_
 
@@ -12,7 +10,6 @@
 #define FPS 40
 #define W 840
 #define H 600
-#define BRAKING 0.991
 #define BALL_SIZE (16)
 #define PLAYER_H (60)
 #define PLAYER_W (16)
