@@ -1,6 +1,12 @@
 NAME = pong
-FLAGS = -Wall -Wextra -std=c++17
+
+# FLAGS = -Wall -Wextra -std=c++17
+FLAGS = -std=c++17 -Wall -Wextra -Werror -Wpedantic
+
 SRC = main.cpp Ball.cpp Bot.cpp Game.cpp GameObjects.cpp GamePlayController.cpp Player.cpp Window.cpp
+
+# SRCS = $(addprefix /src/)
+
 OBJ_D = obj/
 OBJ = $(addprefix $(OBJ_D), $(SRC:.cpp=.o))
 INCLUDES	=	-I./frameworks/SDL2.framework/Versions/A/Headers \
@@ -17,20 +23,18 @@ FRAMEWORKS	=	-F./frameworks \
 all: $(NAME)
 
 $(NAME): $(OBJ)
-#	@clang++ $(OBJ) -o $(NAME) $(FRAMEWORKS)
 	@G++ $(OBJ) -o $(NAME) $(FRAMEWORKS)
 
 $(OBJ): | $(OBJ_D)
 
 $(OBJ_D):
-	@mkdir $(OBJ_D)
+	@mkdir -p $(OBJ_D)
 
-$(OBJ_D)%.o: %.cpp
-#	@clang++ $(FLAGS) -o $@ -c $< $(INCLUDES)
+
+$(OBJ_D)%.o: src/%.cpp
 	@G++ $(FLAGS) -o $@ -c $< $(INCLUDES)
 
 clean:
-#	@rm -f $(OBJ)
 	@rm -rf $(OBJ_D)
 
 fclean: clean

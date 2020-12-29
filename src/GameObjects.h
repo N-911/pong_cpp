@@ -1,7 +1,5 @@
 #ifndef PONG_SRC_GAMEOBJECTS_H_
 #define PONG_SRC_GAMEOBJECTS_H_
-//#include <SDL_rect.h>
-//#include <SDL_image.h>
 #include "Settings.h"
 
 class GameObject {

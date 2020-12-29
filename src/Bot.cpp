@@ -78,6 +78,8 @@ void Bot::moving() {
   }
   set_center();
 }
+
+
 void Bot::move_bot(int x, int y) {
 //
   set_center();

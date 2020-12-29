@@ -4,7 +4,6 @@
 #include "Ball.h"
 #include "Player.h"
 #include <memory>
-//#include "Settings.h"
 #include "GamePlayController.h"
 #include "GameObjects.h"
 #include "Bot.h"
@@ -20,7 +19,7 @@ class Game {
   SDL_Event	m_ev;
   Window m_window;
   int frameCount;
-  int timerFPS;
+//  int timerFPS;
   int lastFrame;
   int fps;
   bool m_pause;
@@ -35,9 +34,7 @@ class Game {
 //  Player* m_player_right;
 //  Bot* m_player_right_bot;
 
-
   GamePlayController* m_game_play;
-
   SDL_Surface *m_score_surface;
   SDL_Texture *m_score_texture;
 
@@ -45,17 +42,15 @@ class Game {
   SDL_bool m_loop;
   SDL_Rect m_score_board;
 
-  SDL_bool _inSampleRect = SDL_FALSE;
-  bool		play_mus;
+//  SDL_bool _inSampleRect = SDL_FALSE;
+//  bool		play_mus;
   int	    m_number_pl;
 
   int show_menu();
   void on_event(SDL_Event& event);
-
   void update();
   void render();
   void draw_score(int x, int y);
-
   bool check_goal();
   void colision(std::shared_ptr<Player> player);
   void colision2(std::shared_ptr<Bot> player);

@@ -22,7 +22,7 @@ class GamePlayController {
   int m_count_win_left;
   int m_game_count;
   int m_score_target;  // количество очков доя победи
-  bool m_is_game_started;
+//  bool m_is_game_started;
 
   void reset_score();
 

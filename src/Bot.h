@@ -9,9 +9,7 @@ class Bot : public GameObject
   Bot(int side);
   virtual ~Bot() {}
 
-//  void draw_surface(unsigned int *color);
   void moving() override;
-//  void set_center();
 
   void set_move(int &key) override;
   void disable_move(int &key) override;

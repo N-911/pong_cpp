@@ -12,7 +12,11 @@ Game::Game() {
   m_game_play = new GamePlayController();
 
 //  m_number_pl = show_menu();
-  m_text_color = (SDL_Color) {255, 255, 0, 255};
+  m_text_color.r = 255;
+  m_text_color.g = 255;
+  m_text_color.b = 0;
+  m_text_color.a = 255;
+
   m_player_left = std::shared_ptr<Player>(new Player(0));
 
   if (m_number_pl == 1) {
@@ -96,7 +100,6 @@ int Game::show_menu() {
             }
           }
           break;
-
         case SDL_MOUSEBUTTONDOWN:x = m_ev.button.x;
           y = m_ev.button.y;
           for (int i = 0; i < num_menu; i += 1) {
@@ -240,7 +243,7 @@ void Game::render() {
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 255, 1);
   SDL_RenderFillRect(m_window.getRender(), m_player_left->get_rect());
   SDL_RenderFillRect(m_window.getRender(), m_player_right_bot2->get_rect());
-  SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 0, 1);
+  SDL_SetRenderDrawColor(m_window.getRender(), 0, 0, 0, 1);
   SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
   // Render sample text
 //  SDL_RenderCopy(m_window.getRender(), _headerText, NULL, &_headerTextRect);

@@ -25,7 +25,10 @@ Window::Window() {
     }
     SDL_FreeSurface(m_surface);
   }
-  m_text_color = (SDL_Color){255, 255, 0, 255};
+  m_text_color.r = 255;
+  m_text_color.g = 255;
+  m_text_color.b = 0;
+  m_text_color.a = 255;
 }
 
 
