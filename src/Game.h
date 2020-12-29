@@ -4,7 +4,7 @@
 #include "Ball.h"
 #include "Player.h"
 #include <memory>
-#include "Settings.h"
+//#include "Settings.h"
 #include "GamePlayController.h"
 #include "GameObjects.h"
 #include "Bot.h"
