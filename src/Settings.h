@@ -3,6 +3,11 @@
 #ifndef PONG_SRC_SETTINGS_H_
 #define PONG_SRC_SETTINGS_H_
 
+#include "SDL.h"
+#include "SDL_image.h"
+#include "SDL_mixer.h"
+#include "SDL_ttf.h"
+
 #define FPS 40
 #define W 840
 #define H 600
