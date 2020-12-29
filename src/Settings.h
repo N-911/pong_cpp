@@ -8,11 +8,10 @@
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
 
+
 #define FPS 40
 #define W 840
 #define H 600
-//#define WIDTH 840
-//#define HEIGHT 600
 #define BRAKING 0.991
 #define BALL_SIZE (16)
 #define PLAYER_H (60)

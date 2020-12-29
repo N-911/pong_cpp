@@ -1,10 +1,6 @@
 #ifndef PONG_SRC_WINDOW_H_
 #define PONG_SRC_WINDOW_H_
 
-// #include <SDL.h>
-// #include <SDL_ttf.h>
-// #include <SDL_image.h>
-// #include <SDL_mixer.h>
 #include "Settings.h"
 
 class Window {

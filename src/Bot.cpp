@@ -84,7 +84,7 @@ void Bot::move_bot(int x, int y) {
     if (x + BALL_SIZE / 2 < H / 2) {
       return;
     }
-    else if (y > center.y) {
+    else if (y + PLAYER_H /4 > center.y) {
       m_sampleRect->y += m_delta;
     } else {
       m_sampleRect->y -= m_delta;
