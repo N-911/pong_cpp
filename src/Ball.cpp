@@ -28,13 +28,13 @@ Ball::~Ball() {
 
 void Ball::moving() {
 //  cout << " ball  before moving x =" <<  pos.x << "y ="  << pos.y << endl;
-  if (m_sampleRect->x - BALL_SIZE/ 2 < 0 || m_sampleRect->x + BALL_SIZE >= W)
-  {
-    speed.x = -speed.x;
-    cout << "ball x =" <<  m_sampleRect->x << "    y ="  << m_sampleRect->y << endl;
-//    Mix_PlayMusic(bum, 0);
-  }
-  if (m_sampleRect->y + speed.y < 0 || m_sampleRect->y + BALL_SIZE + speed.y >= H)
+//  if (m_sampleRect->x - BALL_SIZE/ 2 < 0 || m_sampleRect->x + BALL_SIZE >= W)
+//  {
+//    speed.x = -speed.x;
+//    cout << "ball x =" <<  m_sampleRect->x << "    y ="  << m_sampleRect->y << endl;
+//////    Mix_PlayMusic(bum, 0);
+//  }
+  if (m_sampleRect->y + speed.y <= 0 || m_sampleRect->y + BALL_SIZE + speed.y >= H)
   {
     speed.y = -speed.y;
 //    Mix_PlayMusic(bum, 0);
@@ -59,17 +59,17 @@ bool Ball::is_movind() const {
 
 void Ball::set_new_ball(int side) {
   if (side == 0) {
-    m_sampleRect->x = W /2;
-    m_sampleRect->y = (H - BALL_SIZE ) / 2;
     speed.x = 5;
   }
   else if (side == 1){
-    m_sampleRect->x = W - 30;
-    m_sampleRect->y = (H - BALL_SIZE) / 2;
     speed.x = -5;
   }
-  m_sampleRect->x = m_sampleRect->x;
-  m_sampleRect->y = m_sampleRect->y;
+
+  m_sampleRect->x = W /2 - BALL_SIZE /2;
+  m_sampleRect->y = H/2 + BALL_SIZE / 2;
+
+//  m_sampleRect->x = m_sampleRect->x;
+//  m_sampleRect->y = m_sampleRect->y;
   m_sampleRect->w = BALL_SIZE;
   m_sampleRect->h = BALL_SIZE;
   speed.y = 0;

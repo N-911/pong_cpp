@@ -6,6 +6,7 @@ using std::endl;
 
 GameObject::GameObject (int side) {
   cout << "consturctor GameObject" << endl;
+//  m_sampleRect = std::shared_ptr<SDL_Rect>(new SDL_Rect());
   m_sampleRect = new SDL_Rect();
   m_side = side;
 
@@ -139,7 +140,7 @@ void GameObject::move_start() {
   set_center();
 }
 
-void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
+void GameObject::check_colision(std::shared_ptr<Ball>& m_ball) {
 
     double Dx = m_ball->get_center().x - this->get_center().x;
     double Dy = m_ball->get_center().y - this->get_center().y;
@@ -162,9 +163,9 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
             dt = -0.6;
 
 //    //временный сдвиг
-//    player->get_rect()->x -= player->get_speed().x * dt;
-//    player->get_rect()->y -= player->get_speed().y * dt;
-//    player->set_center();
+      this->get_rect()->x -= this->get_speed().x * dt;
+      this->get_rect()->y -= this->get_speed().y * dt;
+      this->set_center();
 
     m_ball->set_rect_x( m_ball->get_rect()->x - m_ball->get_speed().x * dt);
     m_ball->set_rect_y( m_ball->get_rect()->y - m_ball->get_speed().y * dt);

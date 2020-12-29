@@ -6,32 +6,19 @@
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
 
-
 #define FPS 40
 #define W 840
 #define H 600
 #define BALL_SIZE (16)
-#define PLAYER_H (60)
-#define PLAYER_W (16)
+#define PLAYER_H (32)
+#define PLAYER_W (32)
 #define FONT_SIZE 32
-#define BALL_SPEED 22
+//#define BALL_SPEED 22
 
 enum POSITION {
   LEFT = 0,
   RIGHT = 1
 };
-
-
-/*
-struct Manifold
-{
-  Object *A;
-  Object *B;
-  float penetration;
-  Vec2 normal;
-};
-
-*/
 
 struct Vec2i
 {

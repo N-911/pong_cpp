@@ -11,7 +11,7 @@ class Window {
 
   TTF_Font *getShrift() const { return m_shrift; }
   SDL_Renderer *getRender() const {return m_renderer; }
-  SDL_Texture *getTexture() {return m_texture;}
+  SDL_Texture& getTexture() {return *m_texture;}
  private:
   SDL_Window *m_window;
   SDL_Surface *m_surface;

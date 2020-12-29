@@ -9,11 +9,7 @@ class Bot : public GameObject
   Bot(int side);
   virtual ~Bot() {}
 
-  void moving() override;
-
-  void set_move(int &key) override;
-  void disable_move(int &key) override;
-  void move_bot(int x, int y);
+  void moving(int x, int y) override;
 };
 
 

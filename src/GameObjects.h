@@ -17,6 +17,7 @@ class GameObject {
   Vec2i		center;
   Vec2f		speed;
   double	m_radius;  // radius circle around AABB
+//  std::shared_ptr<SDL_Rect> m_sampleRect;
   SDL_Rect* m_sampleRect;
 
  public:
@@ -28,14 +29,17 @@ class GameObject {
   GameObject& operator=(GameObject&& other) = delete;
 
   // Destructor
-  ~GameObject() {}
+  ~GameObject() {
+//    delete m_sampleRect;
+  }
 
   virtual void set_center();
   virtual void set_move(int &key);
   virtual void moving();
+  virtual void moving(int x, int y)  { }
   virtual void move_start();
   virtual void disable_move(int &key);
-  void check_colision(std::shared_ptr<Ball> m_ball);
+  void check_colision(std::shared_ptr<Ball>& m_ball);
   SDL_Rect* get_rect() { return m_sampleRect;}
   Vec2i get_center() const { return center; }
   Vec2f get_speed() const { return speed; }
