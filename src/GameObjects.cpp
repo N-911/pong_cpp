@@ -4,17 +4,15 @@
 using std::cout;
 using std::endl;
 
-GameObject::GameObject (int side) {
+GameObject::GameObject(int side) {
   cout << "consturctor GameObject" << endl;
-//  m_sampleRect = std::shared_ptr<SDL_Rect>(new SDL_Rect());
   m_sampleRect = new SDL_Rect();
   m_side = side;
 
   if (side == 0) {
     m_sampleRect->x = 0;
     m_sampleRect->y = (H - PLAYER_H) / 2;
-  }
-  else {
+  } else {
     m_sampleRect->x = W - PLAYER_W;
     m_sampleRect->y = (H - PLAYER_H) / 2;
   }
@@ -28,11 +26,9 @@ GameObject::GameObject (int side) {
   m_move_left = false;
   m_move_right = false;
   m_delta = 5;
-//  m_radius = std::sqrt(PLAYER_H * PLAYER_H + PLAYER_W * PLAYER_W) / 2.0;
   m_radius = PLAYER_W / 2;
   set_center();
 }
-
 
 void GameObject::set_center() {
   center.x = m_sampleRect->x + PLAYER_W / 2;
@@ -42,84 +38,62 @@ void GameObject::set_center() {
 void GameObject::set_move(int &key) {
 
   switch (key) {
-    case SDLK_UP:
-      m_move_up = true;
+    case SDLK_UP:m_move_up = true;
       speed.y = -10;
-    case SDLK_w:
-      m_move_up = true;
+    case SDLK_w:m_move_up = true;
       speed.y = -10;
       break;
-    case SDLK_DOWN:
-      m_move_down = true;
+    case SDLK_DOWN:m_move_down = true;
       speed.y = 10;
-    case SDLK_s:
-      m_move_down = true;
+    case SDLK_s:m_move_down = true;
       speed.y = 10;
       break;
-    case SDLK_RIGHT:
-      m_move_right = true;
+    case SDLK_RIGHT:m_move_right = true;
       speed.x = 10;
-    case SDLK_d:
-      m_move_right = true;
+    case SDLK_d:m_move_right = true;
       speed.x = 10;
       break;
-    case SDLK_LEFT:
-      m_move_left = true;
+    case SDLK_LEFT:m_move_left = true;
       speed.x = -10;
-    case SDLK_a:
-      m_move_left = true;
+    case SDLK_a:m_move_left = true;
       speed.x = -10;
       break;
   }
 }
 
 void GameObject::disable_move(int &key) {
-  switch (key)
-  {
-    case SDLK_UP:
-      m_move_up = false;
+  switch (key) {
+    case SDLK_UP:m_move_up = false;
       speed.y = 0;
-    case SDLK_w:
-      m_move_up = false;
+    case SDLK_w:m_move_up = false;
       speed.y = 0;
       break;
-    case SDLK_DOWN:
-      m_move_down = false;
+    case SDLK_DOWN:m_move_down = false;
       speed.y = 0;
-    case SDLK_s:
-      m_move_down = false;
+    case SDLK_s:m_move_down = false;
       speed.y = 0;
       break;
-    case SDLK_RIGHT:
-      m_move_right = false;
+    case SDLK_RIGHT:m_move_right = false;
       speed.x = 0;
-    case SDLK_d:
-      m_move_right = false;
+    case SDLK_d:m_move_right = false;
       speed.x = 0;
       break;
-    case SDLK_LEFT:
-      m_move_left = false;
+    case SDLK_LEFT:m_move_left = false;
       speed.x = 0;
-    case SDLK_a:
-      m_move_left = false;
+    case SDLK_a:m_move_left = false;
       speed.x = 0;
       break;
   }
 }
 
 void GameObject::moving() {
-//  cout << "layer::moving() " << endl;
-//  cout << "before moving " << "x =" << m_sampleRect->x << "y =" << m_sampleRect->y;
-
-  if (m_move_up)
-  {
-    if (m_sampleRect->y - m_delta > 0 )
+  if (m_move_up) {
+    if (m_sampleRect->y - m_delta > 0)
       m_sampleRect->y -= m_delta;
     else
       m_sampleRect->y = 0;
   }
-  if (m_move_down)
-  {
+  if (m_move_down) {
     if (m_sampleRect->y + m_delta < H - 50)
       m_sampleRect->y += m_delta;
     else
@@ -142,37 +116,34 @@ void GameObject::move_start() {
 
 void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 
-    double Dx = m_ball->get_center().x - this->get_center().x;
-    double Dy = m_ball->get_center().y - this->get_center().y;
-    double d = sqrt(Dx * Dx + Dy * Dy);
+  double Dx = m_ball->get_center().x - this->get_center().x;
+  double Dy = m_ball->get_center().y - this->get_center().y;
+  double d = sqrt(Dx * Dx + Dy * Dy);
 
-    if (d == 0)
-        d = 0.01;
+  if (d == 0)
+    d = 0.01;
 
-    if (d <= m_ball->get_radius() + this->get_radius()) {
-        double cos_a = Dx / d;
-        double sin_a = Dy / d;
-        double Vn1 = this->get_speed().x * cos_a + this->get_speed().y * sin_a;
-        double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
+  if (d <= m_ball->get_radius() + this->get_radius()) {
+    double cos_a = Dx / d;
+    double sin_a = Dy / d;
+    double Vn1 = this->get_speed().x * cos_a + this->get_speed().y * sin_a;
+    double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
 
-        // проверка на наложение
-        double dt = (m_ball->get_radius() + this->get_radius() - d) / (Vn1 - Vn2);
-        if (dt > 0.6)
-            dt = 0.6;
-        else if (dt < -0.6)
-            dt = -0.6;
+    // проверка на наложение
+    double dt = (m_ball->get_radius() + this->get_radius() - d) / (Vn1 - Vn2);
+    if (dt > 0.6)
+      dt = 0.6;
+    else if (dt < -0.6)
+      dt = -0.6;
 
-//    //временный сдвиг
-      this->get_rect()->x -= this->get_speed().x * dt;
-      this->get_rect()->y -= this->get_speed().y * dt;
-      this->set_center();
+    this->get_rect()->x -= this->get_speed().x * dt;
+    this->get_rect()->y -= this->get_speed().y * dt;
+    this->set_center();
 
-    m_ball->set_rect_x( m_ball->get_rect()->x - m_ball->get_speed().x * dt);
-    m_ball->set_rect_y( m_ball->get_rect()->y - m_ball->get_speed().y * dt);
+    m_ball->set_rect_x(m_ball->get_rect()->x - m_ball->get_speed().x * dt);
+    m_ball->set_rect_y(m_ball->get_rect()->y - m_ball->get_speed().y * dt);
+    m_ball->set_center();
 
-//    m_ball->set_center();
-
-    //перерасчет
     Dx = m_ball->get_center().x - this->get_center().x;
     Dy = m_ball->get_center().y - this->get_center().y;
     d = sqrt(Dx * Dx + Dy * Dy);
@@ -188,7 +159,6 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 
     double Vt2 = -m_ball->get_speed().x * sin_a + m_ball->get_speed().y * cos_a;
 
-//        проверка направления ускорения
     if (Vn2 < 0)
       Vn2 = Vn1 - Vn2;
     else
@@ -197,26 +167,21 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
     m_ball->set_speed_x(Vn2 * cos_a - Vt2 * sin_a);
     m_ball->set_speed_y(Vn2 * sin_a + Vt2 * cos_a);
 
-    //обратный сдвиг
-        this->get_rect()->x += this->get_speed().x * dt;
-        this->get_rect()->y += this->get_speed().y * dt;
-        this->set_center();
+    this->get_rect()->x += this->get_speed().x * dt;
+    this->get_rect()->y += this->get_speed().y * dt;
+    this->set_center();
 
-        if (m_ball->get_speed().x > 50)
-            m_ball->set_speed_x(50);
-        if (m_ball->get_speed().x < -50)
-            m_ball->set_speed_x(-50);
-        if (m_ball->get_speed().y > 50)
-            m_ball->set_speed_y(50);
-        if (m_ball->get_speed().y < -50)
-            m_ball->set_speed_y(-50);
+    if (m_ball->get_speed().x > 50)
+      m_ball->set_speed_x(50);
+    if (m_ball->get_speed().x < -50)
+      m_ball->set_speed_x(-50);
+    if (m_ball->get_speed().y > 50)
+      m_ball->set_speed_y(50);
+    if (m_ball->get_speed().y < -50)
+      m_ball->set_speed_y(-50);
 
-        m_ball->get_rect()->x += m_ball->get_speed().x * dt;
-        m_ball->get_rect()->y += m_ball->get_speed().y * dt;
-        m_ball->set_center();
-
-//    if (!Mix_PlayingMusic())
-//      Mix_PlayMusic(window.bum, 0);
-
-    }
+    m_ball->get_rect()->x += m_ball->get_speed().x * dt;
+    m_ball->get_rect()->y += m_ball->get_speed().y * dt;
+    m_ball->set_center();
+  }
 }

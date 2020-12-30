@@ -35,7 +35,7 @@ class GameObject {
   virtual void set_center();
   virtual void set_move(int &key);
   virtual void moving();
-  virtual void moving(std::shared_ptr<Ball> ball) {}
+  virtual void moving(std::shared_ptr<Ball> ball) {int x = ball->get_speed().x;};
   virtual void move_start();
   virtual void disable_move(int &key);
   void check_colision(std::shared_ptr<Ball> m_ball);
