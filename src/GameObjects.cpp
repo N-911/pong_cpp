@@ -129,7 +129,6 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
     double Vn1 = this->get_speed().x * cos_a + this->get_speed().y * sin_a;
     double Vn2 = m_ball->get_speed().x * cos_a + m_ball->get_speed().y * sin_a;
 
-    // проверка на наложение
     double dt = (m_ball->get_radius() + this->get_radius() - d) / (Vn1 - Vn2);
     if (dt > 0.6)
       dt = 0.6;
@@ -147,7 +146,6 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
     Dx = m_ball->get_center().x - this->get_center().x;
     Dy = m_ball->get_center().y - this->get_center().y;
     d = sqrt(Dx * Dx + Dy * Dy);
-
     if (d == 0)
       d = 0.01;
 
