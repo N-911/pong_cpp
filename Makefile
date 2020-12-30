@@ -1,7 +1,6 @@
 NAME = pong
 
-# FLAGS = -Wall -Wextra -std=c++17
-FLAGS = -std=c++17 -Wall -Wextra -Werror -Wpedantic
+FLAGS = -std=c++17 -Wall -Wextra  -Wpedantic
 
 SRC = main.cpp Ball.cpp Bot.cpp Game.cpp GameObjects.cpp GamePlayController.cpp Player.cpp Window.cpp
 
