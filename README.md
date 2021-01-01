@@ -32,5 +32,9 @@ ___
 * Pause:                  Space
 * Quit:                   Esc
 
+
+### Refernces
+* https://www.youtube.com/watch?v=_JotrG2bWzM&ab_channel=FamTrinli
+* https://www.youtube.com/watch?v=KrbNkCkeRGg 
 ---
 

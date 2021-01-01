@@ -10,6 +10,9 @@ Game::Game() {
   m_number_pl = 1;
   m_game_play = new GamePlayController();
 
+  frameCount = 0;
+  lastFrame = 0;
+
   m_number_pl = show_menu();
   m_text_color.r = 255;
   m_text_color.g = 255;
@@ -136,22 +139,55 @@ int Game::show_menu() {
 void Game::game_loop() {
   SDL_Event event;
 
+  /*
+  const int TICKS_PER_SECOND = 60;
+  const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+  const int MAX_FRAMESKIP = 10;
+
+  unsigned int next_game_tick = SDL_GetTicks();
+  int loops;
+  float interpolation;
+
+//  Постоянная скорость игры, независящая от переменного FPS
+  while (m_loop) {
+    loops = 0;
+    while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
+      while (SDL_PollEvent(&event)) {
+        on_event(event);
+      }
+      if (!m_pause) {
+        update();
+      }
+      next_game_tick += SKIP_TICKS;
+      loops++;
+    }
+    interpolation = float(SDL_GetTicks() + SKIP_TICKS - next_game_tick)
+        / float(SKIP_TICKS);
+    cout << "interpolation =" << interpolation << endl;
+    render(interpolation);
+  }
+  */
+
   static int lastTime = 0;
   while (m_loop) {
-    lastFrame = SDL_GetTicks();
+    lastFrame = SDL_GetTicks();  // number of milliseconds since the SDL library initialized
     if (lastFrame >= (lastTime + 1000)) {
       lastTime = lastFrame;
       fps = frameCount;
       frameCount = 0;
     }
+    cout << "fps =" << fps << endl;
+
     while (SDL_PollEvent(&event)) {
       on_event(event);
     }
     if (!m_pause) {
       update();
     }
-    render();
+    render(1.0);
   }
+
+
 }
 
 void Game::on_event(SDL_Event &event) {
@@ -218,14 +254,23 @@ void Game::update() {
   }
 }
 
-void Game::render() {
+void Game::render(float interpolation) {
   SDL_RenderClear(m_window.getRender());
+
 
   frameCount++;
   int timerFPS = SDL_GetTicks() - lastFrame;
   if (timerFPS < (1000 / 60)) {
     SDL_Delay((1000 / 60) - timerFPS);
   }
+
+  // Интерполяция и предсказание смещение шарика
+//  view_position = position + (speed * interpolation)
+
+//  int ball_view_position_x = m_ball->get_rect()->x + (m_ball->get_speed().x * interpolation);
+//  int ball_view_position_y = m_ball->get_rect()->y + (m_ball->get_speed().y * interpolation);
+//  m_ball->set_rect_x(ball_view_position_x);
+//  m_ball->set_rect_y(ball_view_position_y);
 
   SDL_SetRenderDrawColor(m_window.getRender(), 0, 0, 0, 0);
   SDL_RenderClear(m_window.getRender());

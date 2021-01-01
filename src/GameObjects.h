@@ -5,6 +5,19 @@
 #include "Settings.h"
 #include "Ball.h"
 
+struct Circle {
+  int x;
+  int y;
+  int r;
+};
+
+struct Vec2d
+{
+  int x;
+  int y;
+};
+
+//template <typename T>
 class GameObject {
 
  protected:

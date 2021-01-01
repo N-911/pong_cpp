@@ -18,7 +18,7 @@ class Game {
   SDL_Event m_ev;
   Window m_window;
   int frameCount;
-  int lastFrame;
+  unsigned int lastFrame;
   int fps;
   bool m_pause;
 
@@ -38,7 +38,7 @@ class Game {
   int show_menu();
   void on_event(SDL_Event &event);
   void update();
-  void render();
+  void render(float interpolation);
   void draw_score();
   int check_goal();
 };
