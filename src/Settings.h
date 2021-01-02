@@ -33,6 +33,17 @@ struct Vec2f
   float y;
 };
 
+struct Circle {
+  int x;
+  int y;
+  int r;
+};
+
+struct Vec2d
+{
+  int x;
+  int y;
+};
 
 
 #endif //PONG_SRC_SETTINGS_H_

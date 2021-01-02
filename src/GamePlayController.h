@@ -1,5 +1,6 @@
 #ifndef PONG_SRC_GAMEPLAYCONTROLLER_H_
 #define PONG_SRC_GAMEPLAYCONTROLLER_H_
+#include <vector>
 
 class GamePlayController {
  public:
@@ -17,6 +18,8 @@ class GamePlayController {
   Score get_score() const { return {m_score_left, m_score_right}; }
 
  private:
+  std::vector<int> m_score;
+
   int m_score_left;
   int m_score_right;
   int m_count_win_right;

@@ -3,13 +3,18 @@
 
 #include <SDL_rect.h>
 #include "Settings.h"
+#include "GameObjects.h"
 
-class Ball {
+class Ball : public GameObject<Circle> {
 
  public:
   Ball(int side);
   virtual ~Ball();
 
+  void setRandomVelocity();
+
+
+  /*
   void moving();
   bool is_movind() const;
   SDL_Rect *get_rect() const { return m_sampleRect; }
@@ -23,12 +28,15 @@ class Ball {
   void set_rect_y(int y);
   void set_speed_x(int x);
   void set_speed_y(int y);
+
+   */
+
  private:
   SDL_Rect *m_sampleRect;
-  Vec2i center;
-  Vec2f speed;
-  double m_radius;  // radius circle
 
+//  Vec2i center;
+//  Vec2f speed;
+//  double m_radius;  // radius circle
 };
 
 #endif //PONG_SRC_BALL_H_
