@@ -4,7 +4,9 @@
 using std::cout;
 using std::endl;
 
-GameObject::GameObject(int side) {
+
+/*
+GameObject::GameObject() {
   cout << "consturctor GameObject" << endl;
   m_sampleRect = new SDL_Rect();
   m_side = side;
@@ -25,67 +27,36 @@ GameObject::GameObject(int side) {
   m_move_down = false;
   m_move_left = false;
   m_move_right = false;
-  m_delta = 5;
+//  m_delta = 5;
   m_radius = PLAYER_W / 2;
   set_center();
 }
+*/
 
+template<>
+void GameObject<Circle>::updateBoundingBox() {
+  m_object.x = m_x + m_object.r;
+  m_object.y = m_y + m_object.r;
+}
+
+template<>
+void GameObject<SDL_Rect>::updateBoundingBox() {
+  m_object.x = m_x;
+  m_object.y = m_y;
+}
+
+
+/*
 void GameObject::set_center() {
   center.x = m_sampleRect->x + PLAYER_W / 2;
   center.y = m_sampleRect->y + PLAYER_H / 2;
 }
 
-void GameObject::set_move(int &key) {
+ */
 
-  switch (key) {
-    case SDLK_UP:m_move_up = true;
-      speed.y = -10;
-    case SDLK_w:m_move_up = true;
-      speed.y = -10;
-      break;
-    case SDLK_DOWN:m_move_down = true;
-      speed.y = 10;
-    case SDLK_s:m_move_down = true;
-      speed.y = 10;
-      break;
-    case SDLK_RIGHT:m_move_right = true;
-      speed.x = 10;
-    case SDLK_d:m_move_right = true;
-      speed.x = 10;
-      break;
-    case SDLK_LEFT:m_move_left = true;
-      speed.x = -10;
-    case SDLK_a:m_move_left = true;
-      speed.x = -10;
-      break;
-  }
-}
 
-void GameObject::disable_move(int &key) {
-  switch (key) {
-    case SDLK_UP:m_move_up = false;
-      speed.y = 0;
-    case SDLK_w:m_move_up = false;
-      speed.y = 0;
-      break;
-    case SDLK_DOWN:m_move_down = false;
-      speed.y = 0;
-    case SDLK_s:m_move_down = false;
-      speed.y = 0;
-      break;
-    case SDLK_RIGHT:m_move_right = false;
-      speed.x = 0;
-    case SDLK_d:m_move_right = false;
-      speed.x = 0;
-      break;
-    case SDLK_LEFT:m_move_left = false;
-      speed.x = 0;
-    case SDLK_a:m_move_left = false;
-      speed.x = 0;
-      break;
-  }
-}
 
+/*
 void GameObject::moving() {
   if (m_move_up) {
     if (m_sampleRect->y - m_delta > 0)
@@ -182,4 +153,6 @@ void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
     m_ball->get_rect()->y += m_ball->get_speed().y * dt;
     m_ball->set_center();
   }
+
 }
+  */

@@ -16,8 +16,7 @@ class Game {
 
  private:
   SDL_Event m_ev;
-  Window m_window
-  ;
+  Window m_window;
   int frameCount;
   unsigned int lastFrame;
   int fps;
@@ -26,15 +25,11 @@ class Game {
 
   std::unique_ptr<Ball> m_ball;
   std::unique_ptr<Player> m_left;
-  std::unique_ptr<Player> m_right;
+  std::unique_ptr<Bot> m_right;
 
 //  std::unique_ptr<Label>  _scoreLabel;
 //  std::unique_ptr<Label> _countdownTimer;
 //  std::unique_ptr<Label> _controlsLabel
-
-//  std::shared_ptr<Ball> m_ball;
-//  Player *m_player_left;
-//  GameObject *m_current_player_right;
 
   GamePlayController *m_game_play;
   SDL_Surface *m_score_surface;
@@ -46,6 +41,7 @@ class Game {
 //  bool		play_mus;
 
   int show_menu();
+
   void on_event(SDL_Event &event);
   void update();
   void render(float interpolation);

@@ -4,9 +4,9 @@
 using std::cout;
 using std::endl;
 
-Bot::Bot(int side) : GameObject(side) {
-}
+Bot::Bot() { };
 
+/*
 void Bot::moving(std::shared_ptr<Ball> ball) {
   if (ball->get_speed().x < 0) {
     return;
@@ -20,4 +20,4 @@ void Bot::moving(std::shared_ptr<Ball> ball) {
   }
   set_center();
 }
-
+*/

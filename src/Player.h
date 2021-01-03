@@ -5,9 +5,12 @@
 class Player : public GameObject<SDL_Rect> {
  public:
 
-  Player(int side);
+  Player();
   virtual ~Player();
 
+  void moveUp();
+  void moveDown();
+  void stop();
 
 };
 

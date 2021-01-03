@@ -5,18 +5,15 @@
 using std::cout;
 using std::endl;
 
-Ball::Ball(int side) {
-  m_sampleRect = new SDL_Rect();
-  set_new_ball(side);
+Ball::Ball(int x, int y) {
+
 }
 
+
+/*
 void Ball::set_center() {
   center.x = m_sampleRect->x + BALL_SIZE / 2;
   center.y = m_sampleRect->y + BALL_SIZE / 2;
-}
-
-Ball::~Ball() {
-  delete m_sampleRect;
 }
 
 void Ball::moving() {
@@ -67,3 +64,5 @@ void Ball::set_speed_x(int x) {
 void Ball::set_speed_y(int y) {
   speed.y = y;
 }
+
+ */

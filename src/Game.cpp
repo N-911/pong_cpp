@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <iostream>
+#include <memory>
 
 using std::cout;
 using std::endl;
@@ -24,21 +25,23 @@ Game::Game() {
   m_score_board.x = SCORE_BOURD_X - m_score_board.w;
   m_score_board.y = SCORE_BOURD_Y - m_score_board.h;
 
-  m_player_left = new Player(0);
-  if (m_number_pl == 1) {
-    m_current_player_right = new Bot(1);
-  } else {
-    m_current_player_right = new Player(1);
-  }
-  m_ball = std::shared_ptr<Ball>(new Ball(1));
+  m_ball = std::unique_ptr<Ball>(new Ball(W/2, H/2));
+  m_left = std::unique_ptr<Player>(new Player());
+  m_right = std::unique_ptr<Bot>(new Bot());
+//  m_player_left = new Player(0);
+//  if (m_number_pl == 1) {
+//    m_current_player_right = new Bot(1);
+//  } else {
+//    m_current_player_right = new Player(1);
+//  }
   m_pause = false;
 }
 
 Game::~Game() {
   cout << "Game Destructor" << endl;
   delete m_game_play;
-  delete m_player_left;
-  delete m_current_player_right;
+//  delete m_player_left;
+//  delete m_current_player_right;
 }
 
 int Game::show_menu() {
@@ -205,29 +208,29 @@ void Game::on_event(SDL_Event &event) {
       }
 
       if (event.key.keysym.sym == SDLK_p) {  // new ball for testing
-        m_ball->set_new_ball(1);
-        m_ball->moving();
+//        m_ball->set_new_ball(1);
+//        m_ball->moving();
       }
       if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
           event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-        m_player_left->set_move(event.key.keysym.sym);
+        m_left->set_move(event.key.keysym.sym);
       }
       if (m_number_pl == 2) {
         if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
             event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-          m_current_player_right->set_move(event.key.keysym.sym);
+          m_right->set_move(event.key.keysym.sym);
         }
       }
       break;
     case SDL_KEYUP:
       if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
           event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-        m_player_left->disable_move(event.key.keysym.sym);
+        m_left->disable_move(event.key.keysym.sym);
       }
       if (m_number_pl == 2) {
         if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
             event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-          m_current_player_right->disable_move(event.key.keysym.sym);
+          m_right->disable_move(event.key.keysym.sym);
         }
       }
       break;
@@ -236,21 +239,21 @@ void Game::on_event(SDL_Event &event) {
 }
 
 void Game::update() {
-  m_player_left->moving();
+  m_left->moving();
   if (m_number_pl == 2)
-    m_current_player_right->moving();
+    m_right->moving();
   else
-    m_current_player_right->moving(m_ball);
+    m_right->moving(m_ball);
   m_ball->moving();
 
   // reset all position
   if (int win_side = check_goal(); win_side != -1) {
-    m_player_left->move_start();
-    m_current_player_right->move_start();
+    m_left->move_start();
+    m_right->move_start();
     m_ball->set_new_ball(win_side);
   } else {
-    m_player_left->check_colision(m_ball);
-    m_current_player_right->check_colision(m_ball);
+    m_left->check_colision(m_ball);
+    m_right->check_colision(m_ball);
   }
 }
 
@@ -276,8 +279,8 @@ void Game::render(float interpolation) {
   SDL_RenderClear(m_window.getRender());
   SDL_RenderCopy(m_window.getRender(), m_window.getTexture(), NULL, NULL);
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 255, 1);
-  SDL_RenderFillRect(m_window.getRender(), m_player_left->get_rect());
-  SDL_RenderFillRect(m_window.getRender(), m_current_player_right->get_rect());
+  SDL_RenderFillRect(m_window.getRender(), m_left->get_rect());
+  SDL_RenderFillRect(m_window.getRender(), m_right->get_rect());
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 0, 0, 1);
   SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
   draw_score();
@@ -286,9 +289,9 @@ void Game::render(float interpolation) {
 
 void Game::draw_score() {
   std::string text = "Score ";
-  text += std::to_string(m_game_play->get_score().left);
+  text += std::to_string(m_game_play->get_score()[0]);
   text += " : ";
-  text += std::to_string(m_game_play->get_score().right);
+  text += std::to_string(m_game_play->get_score()[1]);
   m_score_surface = TTF_RenderText_Solid(m_window.getShrift(), text.c_str(), m_text_color);
   m_score_texture = SDL_CreateTextureFromSurface(m_window.getRender(), m_score_surface);
   SDL_RenderCopy(m_window.getRender(), m_score_texture, NULL, &m_score_board);
@@ -305,8 +308,8 @@ int Game::check_goal() {
     return 1;
   } else if (m_ball->get_rect()->x <= 0) {
     m_game_play->add_score(1);
-    GamePlayController::Score res = m_game_play->get_score();
-    cout << "player right goal score = " << res.left << " : " << res.right << endl;
+    std::vector<int> res = m_game_play->get_score();
+    cout << "player right goal score = " << res[0] << " : " << res[1] << endl;
     return 0;
   }
   return -1;

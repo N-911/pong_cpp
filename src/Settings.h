@@ -33,6 +33,7 @@ struct Vec2f
   float y;
 };
 
+
 struct Circle {
   int x;
   int y;

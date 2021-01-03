@@ -4,10 +4,11 @@
 
 class GamePlayController {
  public:
-  struct Score {
-    int left;
-    int right;
-  };
+
+//  struct Score {
+//    int left;
+//    int right;
+//  };
 
  public:
   GamePlayController();
@@ -15,13 +16,11 @@ class GamePlayController {
   void add_score(int side);
   void check_win();
 
-  Score get_score() const { return {m_score_left, m_score_right}; }
+  std::vector<int> get_score() const { return m_score; }
 
  private:
   std::vector<int> m_score;
 
-  int m_score_left;
-  int m_score_right;
   int m_count_win_right;
   int m_count_win_left;
   int m_game_count;
