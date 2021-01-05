@@ -6,15 +6,17 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-
-
+class Ball;
 
 template <typename T>
 class GameObject {
 
  public:
   // Constructors
-  GameObject() = default;
+  GameObject() {
+    m_object = new SDL_Rect();
+  }
+//  GameObject() = default;
   GameObject(GameObject &other) = delete;
   GameObject &operator=(GameObject &other) = delete;
   GameObject(GameObject &&other) = delete;
@@ -39,11 +41,11 @@ class GameObject {
 //  virtual void set_center();
   void set_move(int &key);
   virtual void moving();
-//  virtual void moving(std::shared_ptr<Ball> ball) {int x = ball->get_speed().x;};
+  virtual void moving(std::shared_ptr<Ball> ball) { };
 //  virtual void move_start();
   virtual void disable_move(int &key);
 //  void check_colision(std::shared_ptr<Ball> m_ball);
-//  SDL_Rect *get_rect() { return m_sampleRect; }
+  SDL_Rect *get_rect() { return m_object; }
 //  Vec2i get_center() const { return center; }
 //  Vec2f get_speed() const { return speed; }
 //  double get_radius() const { return m_radius; }
@@ -65,7 +67,7 @@ class GameObject {
   int m_x;
   int m_y;
   Vec2i m_velocity;
-  T m_object;
+  T* m_object;
 
 };
 

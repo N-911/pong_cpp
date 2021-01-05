@@ -3,6 +3,8 @@
 
 #include "GameObjects.h"
 
+class Ball;
+
 class Bot : public GameObject<SDL_Rect> {
 
  public:
@@ -10,6 +12,7 @@ class Bot : public GameObject<SDL_Rect> {
   virtual ~Bot() {}
 
   void move_to_ball();
+  void moving() override { };
 
 };
 

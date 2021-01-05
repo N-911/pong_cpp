@@ -27,7 +27,14 @@ Game::Game() {
 
   m_ball = std::unique_ptr<Ball>(new Ball(W/2, H/2));
   m_left = std::unique_ptr<Player>(new Player());
-  m_right = std::unique_ptr<Bot>(new Bot());
+
+  if (m_number_pl == 1)
+  {
+    m_right = std::unique_ptr<Bot>(new Bot());
+  }
+  else {
+    m_right = std::unique_ptr<Bot>(new Bot());  //Player
+  }
 //  m_player_left = new Player(0);
 //  if (m_number_pl == 1) {
 //    m_current_player_right = new Bot(1);
@@ -240,20 +247,20 @@ void Game::on_event(SDL_Event &event) {
 
 void Game::update() {
   m_left->moving();
-  if (m_number_pl == 2)
+//  if (m_number_pl == 2)
+//    m_right->moving();
+//  else
     m_right->moving();
-  else
-    m_right->moving(m_ball);
   m_ball->moving();
 
   // reset all position
   if (int win_side = check_goal(); win_side != -1) {
-    m_left->move_start();
-    m_right->move_start();
-    m_ball->set_new_ball(win_side);
+//    m_left->move_start();
+//    m_right->move_start();
+//    m_ball->set_new_ball(win_side);
   } else {
-    m_left->check_colision(m_ball);
-    m_right->check_colision(m_ball);
+//    m_left->check_colision(m_ball);
+//    m_right->check_colision(m_ball);
   }
 }
 
@@ -282,8 +289,8 @@ void Game::render(float interpolation) {
   SDL_RenderFillRect(m_window.getRender(), m_left->get_rect());
   SDL_RenderFillRect(m_window.getRender(), m_right->get_rect());
   SDL_SetRenderDrawColor(m_window.getRender(), 255, 0, 0, 1);
-  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
-  draw_score();
+//  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
+//  draw_score();
   SDL_RenderPresent(m_window.getRender());
 }
 
@@ -300,7 +307,10 @@ void Game::draw_score() {
 }
 
 /*return  0 left side goal, 1 - right side goal, -1 - no goal */
+
 int Game::check_goal() {
+
+  /*
   if (m_ball->get_rect()->x + BALL_SIZE >= W) {
     m_game_play->add_score(0);
     GamePlayController::Score res = m_game_play->get_score();
@@ -312,5 +322,6 @@ int Game::check_goal() {
     cout << "player right goal score = " << res[0] << " : " << res[1] << endl;
     return 0;
   }
+   */
   return -1;
 }
