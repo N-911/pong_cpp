@@ -5,12 +5,12 @@
 
 class Ball : public GameObject<SDL_Rect> {
 
- public:
-  Ball() = default;
-  Ball(int x, int y);
+public:
+    Ball() = default;
+    Ball(int x, int y);
 
-  virtual ~Ball() {}
- private:
+    virtual ~Ball() { }
+private:
 
 };
 

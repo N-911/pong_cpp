@@ -21,18 +21,15 @@ enum POSITION {
   RIGHT = 1
 };
 
-struct Vec2i
-{
+struct Vec2i {
   int x;
   int y;
 };
 
-struct Vec2f
-{
+struct Vec2f {
   float x;
   float y;
 };
-
 
 struct Circle {
   int x;
@@ -40,11 +37,9 @@ struct Circle {
   int r;
 };
 
-struct Vec2d
-{
+struct Vec2d {
   int x;
   int y;
 };
-
 
 #endif //PONG_SRC_SETTINGS_H_

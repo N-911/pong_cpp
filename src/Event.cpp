@@ -1,57 +1,58 @@
 #include "Event.h"
 
-void Event::OnEvent(SDL_Event* event) {
+void Event::OnEvent(SDL_Event* event)
+{
 
-  switch (event->type) {
+    switch (event->type) {
     case SDL_QUIT:m_loop = SDL_FALSE;
-      break;
-    case SDL_KEYDOWN:
-      if (event->key.keysym.sym == SDLK_ESCAPE) {
-        m_loop = SDL_FALSE;
         break;
-      }
-      if (event->key.keysym.sym == SDLK_SPACE) {
+    case SDL_KEYDOWN:
+        if (event->key.keysym.sym==SDLK_ESCAPE) {
+            m_loop = SDL_FALSE;
+            break;
+        }
+        if (event->key.keysym.sym==SDLK_SPACE) {
 //        m_pause = !m_pause;
 //  onPause();
-        break;
-      }
+            break;
+        }
 
-      if (event->key.keysym.sym == SDLK_p) {  // new ball for testing
+        if (event->key.keysym.sym==SDLK_p) {  // new ball for testing
 //        m_ball->set_new_ball(1);
 //        m_ball->moving();
-      }
-      if (event->key.keysym.sym == SDLK_UP || event->key.keysym.sym == SDLK_DOWN ||
-          event->key.keysym.sym == SDLK_RIGHT || event->key.keysym.sym == SDLK_LEFT) {
+        }
+        if (event->key.keysym.sym==SDLK_UP || event->key.keysym.sym==SDLK_DOWN ||
+                event->key.keysym.sym==SDLK_RIGHT || event->key.keysym.sym==SDLK_LEFT) {
 //        m_player_left->set_move(event->key.keysym.sym);
 
-      }
+        }
 //      if (m_number_pl == 2) {
-      if (event->key.keysym.sym == SDLK_w || event->key.keysym.sym == SDLK_s ||
-          event->key.keysym.sym == SDLK_d || event->key.keysym.sym == SDLK_a) {
+        if (event->key.keysym.sym==SDLK_w || event->key.keysym.sym==SDLK_s ||
+                event->key.keysym.sym==SDLK_d || event->key.keysym.sym==SDLK_a) {
 //          m_current_player_right->set_move(event.key.keysym.sym);
-      }
+        }
 //      }
-      break;
+        break;
     case SDL_KEYUP:
-      if (event->key.keysym.sym == SDLK_UP || event->key.keysym.sym == SDLK_DOWN ||
-          event->key.keysym.sym == SDLK_RIGHT || event->key.keysym.sym == SDLK_LEFT) {
+        if (event->key.keysym.sym==SDLK_UP || event->key.keysym.sym==SDLK_DOWN ||
+                event->key.keysym.sym==SDLK_RIGHT || event->key.keysym.sym==SDLK_LEFT) {
 //        m_player_left->disable_move(event.key.keysym.sym);
-      }
+        }
 //      if (m_number_pl == 2) {
-      if (event->key.keysym.sym == SDLK_w || event->key.keysym.sym == SDLK_s ||
-          event->key.keysym.sym == SDLK_d || event->key.keysym.sym == SDLK_a) {
+        if (event->key.keysym.sym==SDLK_w || event->key.keysym.sym==SDLK_s ||
+                event->key.keysym.sym==SDLK_d || event->key.keysym.sym==SDLK_a) {
 //          m_current_player_right->disable_move(event.key.keysym.sym);
-      }
+        }
 //      }
-      break;
+        break;
     default:m_loop = SDL_TRUE;
-  }
+    }
 }
-    /*
+/*
 }
-  switch(Event->type) {
-    case SDL_WINDOWEVENT: {
-      switch(Event->window.event) {
+switch(Event->type) {
+case SDL_WINDOWEVENT: {
+  switch(Event->window.event) {
 //        case SDL_APPMOUSEFOCUS: {
 //          if ( Event->active.gain )    OnMouseFocus();
 //          else                OnMouseBlur();
@@ -74,70 +75,70 @@ void Event::OnEvent(SDL_Event* event) {
 //      break;
 //    }
 
-    case SDL_KEYDOWN: {
-      Event->key.keysym.sym;
+case SDL_KEYDOWN: {
+  Event->key.keysym.sym;
 //      Event->key.keysym.mod,Event->key.keysym.sym;
-        break;
-    }
+    break;
+}
 
-    case SDL_KEYUP: {
-      Event->key.keysym.sym;
+case SDL_KEYUP: {
+  Event->key.keysym.sym;
 //      Event->key.keysym.mod,Event->key.keysym.sym;
-      break;
-    }
+  break;
+}
 
-    case SDL_MOUSEMOTION: {
-      OnMouseMove(Event->motion.x,Event->motion.y,Event->motion.xrel,Event->motion.yrel,(Event->motion.state&SDL_BUTTON(SDL_BUTTON_LEFT))!=0,(Event->motion.state&SDL_BUTTON(SDL_BUTTON_RIGHT))!=0,(Event->motion.state&SDL_BUTTON(SDL_BUTTON_MIDDLE))!=0);
-      break;
-    }
+case SDL_MOUSEMOTION: {
+  OnMouseMove(Event->motion.x,Event->motion.y,Event->motion.xrel,Event->motion.yrel,(Event->motion.state&SDL_BUTTON(SDL_BUTTON_LEFT))!=0,(Event->motion.state&SDL_BUTTON(SDL_BUTTON_RIGHT))!=0,(Event->motion.state&SDL_BUTTON(SDL_BUTTON_MIDDLE))!=0);
+  break;
+}
 
-    case SDL_MOUSEBUTTONDOWN: {
-      switch(Event->button.button) {
-        case SDL_BUTTON_LEFT: {
-          OnLButtonDown(Event->button.x,Event->button.y);
-          break;
-        }
-        case SDL_BUTTON_RIGHT: {
-          OnRButtonDown(Event->button.x,Event->button.y);
-          break;
-        }
-        case SDL_BUTTON_MIDDLE: {
-          OnMButtonDown(Event->button.x,Event->button.y);
-          break;
-        }
-      }
+case SDL_MOUSEBUTTONDOWN: {
+  switch(Event->button.button) {
+    case SDL_BUTTON_LEFT: {
+      OnLButtonDown(Event->button.x,Event->button.y);
       break;
     }
+    case SDL_BUTTON_RIGHT: {
+      OnRButtonDown(Event->button.x,Event->button.y);
+      break;
+    }
+    case SDL_BUTTON_MIDDLE: {
+      OnMButtonDown(Event->button.x,Event->button.y);
+      break;
+    }
+  }
+  break;
+}
 
-    case SDL_MOUSEBUTTONUP:    {
-      switch(Event->button.button) {
-        case SDL_BUTTON_LEFT: {
-          OnLButtonUp(Event->button.x,Event->button.y);
-          break;
-        }
-        case SDL_BUTTON_RIGHT: {
-          OnRButtonUp(Event->button.x,Event->button.y);
-          break;
-        }
-        case SDL_BUTTON_MIDDLE: {
-          OnMButtonUp(Event->button.x,Event->button.y);
-          break;
-        }
-      }
+case SDL_MOUSEBUTTONUP:    {
+  switch(Event->button.button) {
+    case SDL_BUTTON_LEFT: {
+      OnLButtonUp(Event->button.x,Event->button.y);
       break;
     }
+    case SDL_BUTTON_RIGHT: {
+      OnRButtonUp(Event->button.x,Event->button.y);
+      break;
+    }
+    case SDL_BUTTON_MIDDLE: {
+      OnMButtonUp(Event->button.x,Event->button.y);
+      break;
+    }
+  }
+  break;
+}
 
-    case SDL_QUIT: {
-      m_loop = SDL_FALSE;
-    }
-      OnExit();
-      break;
-    }
+case SDL_QUIT: {
+  m_loop = SDL_FALSE;
+}
+  OnExit();
+  break;
+}
 
-    case SDL_SYSWMEVENT: {
-      //Ignore
-      break;
-    }
+case SDL_SYSWMEVENT: {
+  //Ignore
+  break;
+}
 
 //    case SDL_WINDOWEVENT_RESIZED: {
 ////      event->window.windowID, event->window.data1,
@@ -152,12 +153,12 @@ void Event::OnEvent(SDL_Event* event) {
 //      break;
 //    }
 
-    default: {
-      OnUser(Event->user.type,Event->user.code,Event->user.data1,Event->user.data2);
-      break;
-    }
-  }
-     */
+default: {
+  OnUser(Event->user.type,Event->user.code,Event->user.data1,Event->user.data2);
+  break;
+}
+}
+ */
 
 /*
 void Event::OnInputFocus() {

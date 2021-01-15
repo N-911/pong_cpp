@@ -4,7 +4,6 @@
 using std::cout;
 using std::endl;
 
-
 /*
 GameObject::GameObject() {
   cout << "consturctor GameObject" << endl;
@@ -34,15 +33,17 @@ GameObject::GameObject() {
 */
 
 template<>
-void GameObject<Circle>::updateBoundingBox() {
-  m_object->x = m_x + m_object->r;
-  m_object->y = m_y + m_object->r;
+void GameObject<Circle>::updateBoundingBox()
+{
+    m_object->x = m_x + m_object->r;
+    m_object->y = m_y + m_object->r;
 }
 
 template<>
-void GameObject<SDL_Rect>::updateBoundingBox() {
-  m_object->x = m_x;
-  m_object->y = m_y;
+void GameObject<SDL_Rect>::updateBoundingBox()
+{
+    m_object->x = m_x;
+    m_object->y = m_y;
 }
 
 

@@ -5,7 +5,8 @@
 using std::cout;
 using std::endl;
 
-Ball::Ball(int x, int y) {
+Ball::Ball(int x, int y)
+{
 //  m_object = new SDL_Rect();
 }
 

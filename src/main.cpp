@@ -1,9 +1,10 @@
 #include "Game.h"
 
-int main() {
+int main()
+{
 
-  Game game;
-  game.game_loop();
+    Game game;
+    game.game_loop();
 //  system ("leaks -q pong");
-  return (0);
+    return (0);
 }
