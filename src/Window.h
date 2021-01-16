@@ -2,12 +2,23 @@
 #define PONG_SRC_WINDOW_H_
 
 #include "Settings.h"
+#include "IObserver.h"
+#include "EventManager.h"
 
-class Window {
+//enum class GameState {
+//    MainMenu,
+//    GameScreen,
+//    ScoreScreen,
+//};
+
+class Window : public IObserver {
 
 public:
-    Window();
+    Window(EventManager& observable);
+
     virtual ~Window();
+
+    void UpdateStatus(SDL_Event& event) override;
 
     TTF_Font* getShrift() const { return m_shrift; }
     SDL_Renderer* getRender() const { return m_renderer; }
@@ -20,6 +31,11 @@ private:
     SDL_Renderer* m_renderer;
     SDL_Texture* m_texture;
     SDL_Color m_text_color;
+//    GameState m_state;
+//    SDL_Event* m_event_key {nullptr};
+    EventManager& m_observer;
+    int m_current_id;
+
 //  Mix_Music	*m_bum;
 //  Mix_Music	*m_goal;
 

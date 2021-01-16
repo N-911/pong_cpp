@@ -3,12 +3,16 @@
 
 #include <string>
 #include <SDL_types.h>
+#include <SDL_events.h>
 
 class IObserver
 {
 public:
   virtual ~IObserver() { };
-  virtual void UpdateStatus(Uint32 event) = 0;
+  virtual void UpdateStatus(SDL_Event& event) = 0;
+
+protected:
+    static int m_observer_id;
 };
 
 #endif //PONG_IOBSERVER_H

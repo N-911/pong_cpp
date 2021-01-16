@@ -14,8 +14,11 @@ Game::Game()
     m_number_pl = 2;
     m_game_play = new GamePlayController();
 
+    GameState m_state(GameState::MainMenu);
+
     m_frame_count = 0;
     m_last_frame = 0;
+    m_state = GameState::GameScreen;
 
 //    m_number_pl = show_menu();
     m_text_color.r = 255;
@@ -29,14 +32,17 @@ Game::Game()
     m_score_board.y = SCORE_BOURD_Y - m_score_board.h;
 
     m_event_manager = new EventManager();
+
+    m_window = new Window(*m_event_manager);
+
     m_ball = std::unique_ptr<Ball>(new Ball(W / 2, H / 2));
-    m_left = std::unique_ptr<Player>(new Player());
+    m_left = std::unique_ptr<Player>(new Player(*m_event_manager));
 
     if (m_number_pl == 1) {
 //        m_right = std::unique_ptr<Bot>(new Bot());
     }
     else {
-        m_right = std::unique_ptr<Player>(new Player());  //Player
+        m_right = std::unique_ptr<Player>(new Player(*m_event_manager));  //Player
     }
     m_pause = false;
 }
@@ -63,8 +69,8 @@ int Game::show_menu()
 
     SDL_Surface* menus[num_menu];
 
-    menus[0] = TTF_RenderText_Solid(m_window.getShrift(), menu_point[0], color[0]);
-    menus[1] = TTF_RenderText_Solid(m_window.getShrift(), menu_point[1], color[0]);
+    menus[0] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[0], color[0]);
+    menus[1] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[1], color[0]);
 
     SDL_Rect pos[num_menu];
 
@@ -78,56 +84,57 @@ int Game::show_menu()
     while (1) {
         while (SDL_PollEvent(&m_ev)) {
             switch (m_ev.type) {
-            case SDL_QUIT:SDL_FreeSurface(menus[0]);
-                SDL_FreeSurface(menus[1]);
-                SDL_FreeSurface(screen);
-                SDL_DestroyTexture(texture);
-                m_loop = SDL_FALSE;
-                return (0);
-
-            case SDL_KEYDOWN:
-                if (m_ev.key.keysym.sym == SDLK_ESCAPE) {
-                    SDL_FreeSurface(menus[0]);
+                case SDL_QUIT:SDL_FreeSurface(menus[0]);
                     SDL_FreeSurface(menus[1]);
                     SDL_FreeSurface(screen);
                     SDL_DestroyTexture(texture);
                     m_loop = SDL_FALSE;
                     return (0);
-                }
 
-            case SDL_MOUSEMOTION:x = m_ev.motion.x;
-                y = m_ev.motion.y;
-                for (int i = 0; i < num_menu; i += 1) {
-                    if (x >= pos[i].x && x <= pos[i].x + pos[i].w &&
-                            y >= pos[i].y && y <= pos[i].y + pos[i].h) {
-                        if (!selected[i]) {
-                            selected[i] = 1;
-                            SDL_FreeSurface(menus[i]);
-                            menus[i] = TTF_RenderText_Solid(m_window.getShrift(), menu_point[i], color[1]);
-                        }
-                    }
-                    else {
-                        if (selected[i]) {
-                            selected[i] = 0;
-                            SDL_FreeSurface(menus[i]);
-                            menus[i] = TTF_RenderText_Solid(m_window.getShrift(), menu_point[i], color[0]);
-                        }
-                    }
-                }
-                break;
-            case SDL_MOUSEBUTTONDOWN:x = m_ev.button.x;
-                y = m_ev.button.y;
-                for (int i = 0; i < num_menu; i += 1) {
-                    if (x >= pos[i].x && x <= pos[i].x + pos[i].w &&
-                            y >= pos[i].y && y <= pos[i].y + pos[i].h) {
-                        SDL_FreeSurface(screen);
-                        SDL_DestroyTexture(texture);
+                case SDL_KEYDOWN:
+                    if (m_ev.key.keysym.sym == SDLK_ESCAPE) {
                         SDL_FreeSurface(menus[0]);
                         SDL_FreeSurface(menus[1]);
-                        return (i + 1);
+                        SDL_FreeSurface(screen);
+                        SDL_DestroyTexture(texture);
+                        m_loop = SDL_FALSE;
+                        return (0);
                     }
-                }
-                break;
+
+                case SDL_MOUSEMOTION:x = m_ev.motion.x;
+                    y = m_ev.motion.y;
+                    for (int i = 0; i < num_menu; i += 1) {
+                        if (x >= pos[i].x && x <= pos[i].x + pos[i].w &&
+                                y >= pos[i].y && y <= pos[i].y + pos[i].h) {
+                            if (!selected[i]) {
+                                selected[i] = 1;
+                                SDL_FreeSurface(menus[i]);
+                                menus[i] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[i], color[1]);
+                            }
+                        }
+                        else {
+                            if (selected[i]) {
+                                selected[i] = 0;
+                                SDL_FreeSurface(menus[i]);
+                                menus[i] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[i], color[0]);
+
+                            }
+                        }
+                    }
+                    break;
+                case SDL_MOUSEBUTTONDOWN:x = m_ev.button.x;
+                    y = m_ev.button.y;
+                    for (int i = 0; i < num_menu; i += 1) {
+                        if (x >= pos[i].x && x <= pos[i].x + pos[i].w &&
+                                y >= pos[i].y && y <= pos[i].y + pos[i].h) {
+                            SDL_FreeSurface(screen);
+                            SDL_DestroyTexture(texture);
+                            SDL_FreeSurface(menus[0]);
+                            SDL_FreeSurface(menus[1]);
+                            return (i + 1);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -135,50 +142,20 @@ int Game::show_menu()
             SDL_BlitSurface(menus[i], NULL, screen, &pos[i]);
         }
 
-        texture = SDL_CreateTextureFromSurface(m_window.getRender(), screen);
+        texture = SDL_CreateTextureFromSurface(m_window->getRender(), screen);
         SDL_Rect rect;
         SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
         rect.x = (W - rect.w) / 2;
         rect.y = (H - rect.h) / 2;
-        SDL_RenderClear(m_window.getRender());
-        SDL_RenderCopy(m_window.getRender(), texture, NULL, &rect);
-        SDL_RenderPresent(m_window.getRender());
+        SDL_RenderClear(m_window->getRender());
+        SDL_RenderCopy(m_window->getRender(), texture, NULL, &rect);
+        SDL_RenderPresent(m_window->getRender());
     }
 }
 
 void Game::game_loop()
 {
     SDL_Event event;
-
-    /*
-    const int TICKS_PER_SECOND = 60;
-    const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
-    const int MAX_FRAMESKIP = 10;
-
-    unsigned int next_game_tick = SDL_GetTicks();
-    int loops;
-    float interpolation;
-
-  //  Постоянная скорость игры, независящая от переменного FPS
-    while (m_loop) {
-      loops = 0;
-      while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
-        while (SDL_PollEvent(&event)) {
-          on_event(event);
-        }
-        if (!m_pause) {
-          update();
-        }
-        next_game_tick += SKIP_TICKS;
-        loops++;
-      }
-      interpolation = float(SDL_GetTicks() + SKIP_TICKS - next_game_tick)
-          / float(SKIP_TICKS);
-      cout << "interpolation =" << interpolation << endl;
-      render(interpolation);
-    }
-    */
-
     static int lastTime = 0;
     while (m_loop) {
         m_last_frame = SDL_GetTicks();  // number of milliseconds since the SDL library initialized
@@ -187,15 +164,61 @@ void Game::game_loop()
             m_fps = m_frame_count;
             m_frame_count = 0;
         }
-        cout << "fps =" << m_fps << endl;
+//        cout << "fps =" << m_fps << endl;
 
         while (SDL_PollEvent(&event)) {
-            on_event(event);
+            switch (m_state) {
+                case (GameState::MainMenu): {
+                    if (event.type == SDL_QUIT) {
+                        cout << " press quit" << endl;
+                        m_loop = SDL_FALSE;
+                        break;
+                    }
+                }
+                case (GameState::GameScreen): {
+                    if (event.type == SDLK_SPACE)
+                        m_pause = !m_pause;
+                    else {
+                        m_event_manager->ChangeStatus(event);
+                    }
+
+                }
+                default:break;
+            }
         }
-        if (!m_pause) {
-            update();
+        if (!m_pause)
+            render_scene();
+    }
+}
+
+void Game::render_scene()
+{
+    SDL_RenderClear(m_window->getRender());
+
+    m_frame_count++;
+    int timerFPS = SDL_GetTicks() - m_last_frame;
+    if (timerFPS < (1000 / 60)) {
+        SDL_Delay((1000 / 60) - timerFPS);
+    }
+
+    switch (m_state) {
+        case (GameState::MainMenu): {
+
         }
-        render(1.0);
+        case (GameState::GameScreen) : {
+            SDL_SetRenderDrawColor(m_window->getRender(), 0, 0, 0, 0);
+            SDL_RenderClear(m_window->getRender());
+            SDL_RenderCopy(m_window->getRender(), m_window->getTexture(), NULL, NULL);
+            SDL_SetRenderDrawColor(m_window->getRender(), 255, 255, 255, 1);
+            SDL_RenderFillRect(m_window->getRender(), m_left->get_rect());
+            SDL_RenderFillRect(m_window->getRender(), m_right->get_rect());
+            SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 0, 1);
+
+//  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
+//  draw_score();
+            SDL_RenderPresent(m_window->getRender());
+        }
+        default: break;
     }
 
 }
@@ -203,46 +226,46 @@ void Game::game_loop()
 void Game::on_event(SDL_Event& event)
 {
     switch (event.type) {
-    case SDL_QUIT:m_loop = SDL_FALSE;
-        break;
-    case SDL_KEYDOWN:
-        if (event.key.keysym.sym == SDLK_ESCAPE) {
-            m_loop = SDL_FALSE;
+        case SDL_QUIT:m_loop = SDL_FALSE;
             break;
-        }
-        if (event.key.keysym.sym == SDLK_SPACE) {
-            m_pause = !m_pause;
-            break;
-        }
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                m_loop = SDL_FALSE;
+                break;
+            }
+            if (event.key.keysym.sym == SDLK_SPACE) {
+                m_pause = !m_pause;
+                break;
+            }
 
-        if (event.key.keysym.sym == SDLK_p) {  // new ball for testing
+            if (event.key.keysym.sym == SDLK_p) {  // new ball for testing
 //        m_ball->set_new_ball(1);
 //        m_ball->moving();
-        }
-        if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-                event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-            m_left->set_move(event.key.keysym.sym);
-        }
-        if (m_number_pl == 2) {
-            if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
-                    event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-                m_right->set_move(event.key.keysym.sym);
             }
-        }
-        break;
-    case SDL_KEYUP:
-        if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-                event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-            m_left->disable_move(event.key.keysym.sym);
-        }
-        if (m_number_pl == 2) {
-            if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
-                    event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-                m_right->disable_move(event.key.keysym.sym);
+            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+                    event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
+                m_left->set_move(event.key.keysym.sym);
             }
-        }
-        break;
-    default:m_loop = SDL_TRUE;
+            if (m_number_pl == 2) {
+                if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
+                        event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
+                    m_right->set_move(event.key.keysym.sym);
+                }
+            }
+            break;
+        case SDL_KEYUP:
+            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+                    event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
+                m_left->disable_move(event.key.keysym.sym);
+            }
+            if (m_number_pl == 2) {
+                if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
+                        event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
+                    m_right->disable_move(event.key.keysym.sym);
+                }
+            }
+            break;
+        default:m_loop = SDL_TRUE;
     }
 }
 
@@ -269,7 +292,7 @@ void Game::update()
 
 void Game::render(float interpolation)
 {
-    SDL_RenderClear(m_window.getRender());
+    SDL_RenderClear(m_window->getRender());
 
     m_frame_count++;
     int timerFPS = SDL_GetTicks() - m_last_frame;
@@ -285,16 +308,16 @@ void Game::render(float interpolation)
 //  m_ball->set_rect_x(ball_view_position_x);
 //  m_ball->set_rect_y(ball_view_position_y);
 
-    SDL_SetRenderDrawColor(m_window.getRender(), 0, 0, 0, 0);
-    SDL_RenderClear(m_window.getRender());
-    SDL_RenderCopy(m_window.getRender(), m_window.getTexture(), NULL, NULL);
-    SDL_SetRenderDrawColor(m_window.getRender(), 255, 255, 255, 1);
-    SDL_RenderFillRect(m_window.getRender(), m_left->get_rect());
-    SDL_RenderFillRect(m_window.getRender(), m_right->get_rect());
-    SDL_SetRenderDrawColor(m_window.getRender(), 255, 0, 0, 1);
+    SDL_SetRenderDrawColor(m_window->getRender(), 0, 0, 0, 0);
+    SDL_RenderClear(m_window->getRender());
+    SDL_RenderCopy(m_window->getRender(), m_window->getTexture(), NULL, NULL);
+    SDL_SetRenderDrawColor(m_window->getRender(), 255, 255, 255, 1);
+    SDL_RenderFillRect(m_window->getRender(), m_left->get_rect());
+    SDL_RenderFillRect(m_window->getRender(), m_right->get_rect());
+    SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 0, 1);
 //  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
 //  draw_score();
-    SDL_RenderPresent(m_window.getRender());
+    SDL_RenderPresent(m_window->getRender());
 }
 
 void Game::draw_score()
@@ -303,9 +326,9 @@ void Game::draw_score()
     text += std::to_string(m_game_play->get_score()[0]);
     text += " : ";
     text += std::to_string(m_game_play->get_score()[1]);
-    m_score_surface = TTF_RenderText_Solid(m_window.getShrift(), text.c_str(), m_text_color);
-    m_score_texture = SDL_CreateTextureFromSurface(m_window.getRender(), m_score_surface);
-    SDL_RenderCopy(m_window.getRender(), m_score_texture, NULL, &m_score_board);
+    m_score_surface = TTF_RenderText_Solid(m_window->getShrift(), text.c_str(), m_text_color);
+    m_score_texture = SDL_CreateTextureFromSurface(m_window->getRender(), m_score_surface);
+    SDL_RenderCopy(m_window->getRender(), m_score_texture, NULL, &m_score_board);
     SDL_DestroyTexture(m_score_texture);
     SDL_FreeSurface(m_score_surface);
 }
@@ -330,3 +353,33 @@ int Game::check_goal()
      */
     return -1;
 }
+
+
+/*
+const int TICKS_PER_SECOND = 60;
+const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+const int MAX_FRAMESKIP = 10;
+
+unsigned int next_game_tick = SDL_GetTicks();
+int loops;
+float interpolation;
+
+//  Постоянная скорость игры, независящая от переменного FPS
+while (m_loop) {
+  loops = 0;
+  while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
+    while (SDL_PollEvent(&event)) {
+      on_event(event);
+    }
+    if (!m_pause) {
+      update();
+    }
+    next_game_tick += SKIP_TICKS;
+    loops++;
+  }
+  interpolation = float(SDL_GetTicks() + SKIP_TICKS - next_game_tick)
+      / float(SKIP_TICKS);
+  cout << "interpolation =" << interpolation << endl;
+  render(interpolation);
+}
+*/

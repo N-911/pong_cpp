@@ -10,6 +10,15 @@
 #include "Bot.h"
 #include "EventManager.h"
 
+
+enum class GameState {
+    MainMenu,
+    GameScreen,
+    ScoreScreen,
+};
+
+
+
 class Game {
 public:
     Game();
@@ -18,13 +27,16 @@ public:
 
 private:
     SDL_Event m_ev;
-    Window m_window;
+    EventManager* m_event_manager;
+    Window* m_window;
+    GameState m_state;
+    SDL_bool m_loop;
+
+
     int m_frame_count;
     unsigned int m_last_frame;
-    int m_fps;
-
-    EventManager* m_event_manager;
-    bool m_pause;
+    int m_fps{0};
+    bool m_pause {false};
 
     std::unique_ptr<Ball> m_ball;
     std::unique_ptr<Player> m_left;
@@ -39,16 +51,18 @@ private:
     SDL_Surface* m_score_surface;
     SDL_Texture* m_score_texture;
     SDL_Color m_text_color;
-    SDL_bool m_loop;
+
     SDL_Rect m_score_board;
     int m_number_pl;
 //  bool		play_mus;
 
     int show_menu();
 
+//    void switch_state();
     void on_event(SDL_Event& event);
     void update();
     void render(float interpolation);
+    void render_scene();
     void draw_score();
     int check_goal();
 };

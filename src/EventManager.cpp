@@ -17,16 +17,17 @@ void EventManager::Detach(IObserver* observer)
     m_list_observer.remove(observer);
 }
 
-void EventManager::Notify()
+void EventManager::Notify(SDL_Event& event)
 {
     for (auto observer : m_list_observer) {
-//        observer->UpdateStatus(m_event_type);
+        observer->UpdateStatus(event);
     }
 }
-void EventManager::ChangeStatus(Uint32 event)
+
+void EventManager::ChangeStatus(SDL_Event& event)
 {
-    m_event_type = event;
-    Notify();
+//    m_event_type = event;
+    Notify(event);
 }
 
 

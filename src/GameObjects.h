@@ -15,7 +15,7 @@ public:
     // Constructors
     GameObject()
     {
-        m_object = new SDL_Rect();
+        m_object = new T();
     }
 //  GameObject() = default;
     GameObject(GameObject& other) = delete;
@@ -26,7 +26,8 @@ public:
     // Destructor
     ~GameObject()
     {
-        delete m_sampleRect;
+//        delete m_sampleRect;
+        delete m_object;
     }
 
     Vec2i velocity() const { return m_velocity; }

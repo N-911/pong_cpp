@@ -5,24 +5,31 @@
 using std::cout;
 using std::endl;
 
-Window::Window()
+Window::Window(EventManager& observable)
+        :m_observer(observable)
 {
     cout << "Window Construtor" << endl;
     init_SDL();
     init_window_and_renderer();
     setup_window_icon();
 
+    m_observer.Attach(this);
+    cout << "Attach Window to observer id =" << ++m_observer_id << endl;
+    this->m_current_id = m_observer_id;
+
+//    m_state = GameState::MainMenu;
+
     m_surface = NULL;
     m_texture = NULL;
     // Load image at specified path
     m_surface = IMG_Load("resources/floor.png");
-    if (m_surface==NULL) {
+    if (m_surface == NULL) {
         printf("[Error] Unable to load image : %s\n", SDL_GetError());
         exit(0);
     }
     else {
         m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
-        if (m_texture==NULL) {
+        if (m_texture == NULL) {
             printf("[Error] Unable to create texture : %s\n", SDL_GetError());
         }
         SDL_FreeSurface(m_surface);
@@ -52,7 +59,7 @@ Window::~Window()
 void Window::init_SDL()
 {
     // Initialise SDL2 and output some useful display info
-    if (SDL_Init(SDL_INIT_EVERYTHING)!=0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         cout << "[Error] SDL Init : " << SDL_GetError() << endl;
         exit(1);
     }
@@ -64,7 +71,7 @@ void Window::init_SDL()
     }
 
     // Initialise TTF
-    if (TTF_Init()==-1) {
+    if (TTF_Init() == -1) {
         cout << TTF_GetError() << endl;
         exit(1);
     }
@@ -75,7 +82,7 @@ void Window::init_SDL()
     }
 
     // Initialise mixer
-    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096)!=0) {
+    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
         cout << "[Error] Error Initialising Audio : " << Mix_GetError() << endl;
         exit(1);
     }
@@ -110,7 +117,7 @@ void Window::create_window()
 
 void Window::init_window_and_renderer()
 {
-    if (SDL_CreateWindowAndRenderer(W, H, SDL_WINDOW_SHOWN, &m_window, &m_renderer)!=0) {
+    if (SDL_CreateWindowAndRenderer(W, H, SDL_WINDOW_SHOWN, &m_window, &m_renderer) != 0) {
         printf("[Error] Creating Window and Renderer: %s\n", SDL_GetError());
         exit(0);
     }
@@ -129,4 +136,37 @@ void Window::setup_window_icon()
 
     // ...and can now free the appicon surface
     SDL_FreeSurface(iconSurface);
+}
+void Window::UpdateStatus(SDL_Event& event)
+{
+
+    /*
+    switch (m_state) {
+
+    case (GameState::MainMenu): {
+
+        if (event == SDL_QUIT) {
+            m_loop = SDL_FALSE;
+            break;
+        }
+
+        if (event == SDL_KEYDOWN) {
+            cout << "SDL_KEYDOWN pressed" << endl;
+        }
+        else if (event == SDL_KEYUP) {
+            cout << "SDL_KEYUP pressed" << endl;
+        }
+        else if (event == SDLK_KP_ENTER) {
+            cout << "enter pressed" << endl;
+        }
+    }
+    case (GameState::GameScreen): { ;
+    }
+    case (GameState::ScoreScreen): { ;
+    }
+    default:break;
+    }
+
+     */
+
 }

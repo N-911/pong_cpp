@@ -14,7 +14,7 @@ project(pong)
 
 # ------- Set Vars ------- #
 
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMAKE")
 set(SOURCE_FILES src/main.cpp src/Window.cpp src/Game.cpp src/Player.cpp src/Ball.cpp src/GamePlayController.cpp
