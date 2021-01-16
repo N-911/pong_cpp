@@ -7,15 +7,18 @@ using std::cout;
 using std::endl;
 
 Player::Player(EventManager& observable)
-        :m_observable(observable)
+        :m_observer(observable)
 {
-    m_observable.Attach(this);
+    m_observer.Attach(this);
     cout << "Attach Player to observer id =" << ++m_observer_id << endl;
     this->m_current_id = m_observer_id;
+    m_object->x = 10;
+    m_object->y = H / 2 - 5;
 }
 
 Player::~Player()
 {
+
 }
 
 void Player::UpdateStatus(SDL_Event& event)
@@ -39,6 +42,7 @@ void Player::UpdateStatus(SDL_Event& event)
         }
     }
 }
+
 
 /*
 void foo()

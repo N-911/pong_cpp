@@ -206,13 +206,17 @@ void Game::render_scene()
 
         }
         case (GameState::GameScreen) : {
+
+            cout << "Game Screen" << endl;
+
             SDL_SetRenderDrawColor(m_window->getRender(), 0, 0, 0, 0);
             SDL_RenderClear(m_window->getRender());
             SDL_RenderCopy(m_window->getRender(), m_window->getTexture(), NULL, NULL);
             SDL_SetRenderDrawColor(m_window->getRender(), 255, 255, 255, 1);
+            cout << "m_left x =" << m_left->get_rect()->x << "m_left y=" << m_left->get_rect()->y;
             SDL_RenderFillRect(m_window->getRender(), m_left->get_rect());
             SDL_RenderFillRect(m_window->getRender(), m_right->get_rect());
-            SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 0, 1);
+            SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 1, 1);
 
 //  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
 //  draw_score();
@@ -221,52 +225,6 @@ void Game::render_scene()
         default: break;
     }
 
-}
-
-void Game::on_event(SDL_Event& event)
-{
-    switch (event.type) {
-        case SDL_QUIT:m_loop = SDL_FALSE;
-            break;
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE) {
-                m_loop = SDL_FALSE;
-                break;
-            }
-            if (event.key.keysym.sym == SDLK_SPACE) {
-                m_pause = !m_pause;
-                break;
-            }
-
-            if (event.key.keysym.sym == SDLK_p) {  // new ball for testing
-//        m_ball->set_new_ball(1);
-//        m_ball->moving();
-            }
-            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-                    event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-                m_left->set_move(event.key.keysym.sym);
-            }
-            if (m_number_pl == 2) {
-                if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
-                        event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-                    m_right->set_move(event.key.keysym.sym);
-                }
-            }
-            break;
-        case SDL_KEYUP:
-            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-                    event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-                m_left->disable_move(event.key.keysym.sym);
-            }
-            if (m_number_pl == 2) {
-                if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
-                        event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-                    m_right->disable_move(event.key.keysym.sym);
-                }
-            }
-            break;
-        default:m_loop = SDL_TRUE;
-    }
 }
 
 void Game::update()
@@ -352,6 +310,54 @@ int Game::check_goal()
     }
      */
     return -1;
+}
+
+
+
+void Game::on_event(SDL_Event& event)
+{
+    switch (event.type) {
+        case SDL_QUIT:m_loop = SDL_FALSE;
+            break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+                m_loop = SDL_FALSE;
+                break;
+            }
+            if (event.key.keysym.sym == SDLK_SPACE) {
+                m_pause = !m_pause;
+                break;
+            }
+
+            if (event.key.keysym.sym == SDLK_p) {  // new ball for testing
+//        m_ball->set_new_ball(1);
+//        m_ball->moving();
+            }
+            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+                    event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
+                m_left->set_move(event.key.keysym.sym);
+            }
+            if (m_number_pl == 2) {
+                if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
+                        event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
+                    m_right->set_move(event.key.keysym.sym);
+                }
+            }
+            break;
+        case SDL_KEYUP:
+            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+                    event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
+                m_left->disable_move(event.key.keysym.sym);
+            }
+            if (m_number_pl == 2) {
+                if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
+                        event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
+                    m_right->disable_move(event.key.keysym.sym);
+                }
+            }
+            break;
+        default:m_loop = SDL_TRUE;
+    }
 }
 
 

@@ -16,8 +16,8 @@ public:
     GameObject()
     {
         m_object = new T();
+
     }
-//  GameObject() = default;
     GameObject(GameObject& other) = delete;
     GameObject& operator=(GameObject& other) = delete;
     GameObject(GameObject&& other) = delete;
@@ -56,17 +56,19 @@ public:
 protected:
     int m_delta;
     //  double m_radius;  // radius circle in AABB
-    SDL_Rect* m_sampleRect;
+//    SDL_Rect* m_sampleRect;
+
     bool m_move_up;
     bool m_move_down;
     bool m_move_left;
     bool m_move_right;
-    Vec2i center;
 
+    Vec2i center;
     Vec2f m_speed;
 //  int m_speed;
 
     // ===========
+
     int m_x;
     int m_y;
     Vec2i m_velocity;
@@ -153,16 +155,16 @@ template<typename T>
 void GameObject<T>::moving()
 {
     if (m_move_up) {
-        if (m_sampleRect->y - m_delta > 0)
-            m_sampleRect->y -= m_delta;
+        if (m_object->y - m_delta > 0)
+            m_object->y -= m_delta;
         else
-            m_sampleRect->y = 0;
+            m_object->y = 0;
     }
     if (m_move_down) {
-        if (m_sampleRect->y + m_delta < H - 50)
-            m_sampleRect->y += m_delta;
+        if (m_object->y + m_delta < H - 50)
+            m_object->y += m_delta;
         else
-            m_sampleRect->y = H - 50;
+            m_object->y = H - 50;
     }
 //  set_center();
 }

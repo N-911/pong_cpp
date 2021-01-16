@@ -5,7 +5,6 @@
 #include "IEventManager.h"
 #include <SDL_events.h>
 
-
 class EventManager : public IEventManager {
 public:
 

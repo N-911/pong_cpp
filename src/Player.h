@@ -19,7 +19,7 @@ public:
 
 private:
 //    SDL_Event* m_event_key {nullptr};
-    EventManager  &m_observable;
+    EventManager  &m_observer;
 //    const int    m_id;
     int   m_current_id;
 };
