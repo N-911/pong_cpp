@@ -18,7 +18,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMAKE")
 set(SOURCE_FILES src/main.cpp src/Window.cpp src/Game.cpp src/Player.cpp src/Ball.cpp src/GamePlayController.cpp
-        src/GameObjects.cpp src/Bot.cpp src/Event.cpp src/IEventManager.h src/IObserver.h
+        src/GameObjects.cpp src/Bot.cpp  src/IEventManager.h src/IObserver.h
         src/EventManager.cpp)
 
 Message("")

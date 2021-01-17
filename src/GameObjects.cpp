@@ -33,14 +33,14 @@ GameObject::GameObject() {
 */
 
 template<>
-void GameObject<Circle>::updateBoundingBox()
+void GameObject<Circle>::update_box()
 {
     m_object->x = m_x + m_object->r;
     m_object->y = m_y + m_object->r;
 }
 
 template<>
-void GameObject<SDL_Rect>::updateBoundingBox()
+void GameObject<SDL_Rect>::update_box()
 {
     m_object->x = m_x;
     m_object->y = m_y;

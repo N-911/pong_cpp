@@ -1,7 +1,7 @@
 #ifndef PONG_SRC_EVENT_H_
 #define PONG_SRC_EVENT_H_
 
-#include "Settings.h"
+#include "../src/Settings.h"
 
 class Event {
 public:

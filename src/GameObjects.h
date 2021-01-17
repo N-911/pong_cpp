@@ -4,7 +4,10 @@
 #include <memory>
 #include "Settings.h"
 #include <SDL.h>
+#include <iostream>
 #include <SDL_image.h>
+
+using std::cout;
 
 class Ball;
 
@@ -33,13 +36,13 @@ public:
     Vec2i velocity() const { return m_velocity; }
 
     // modify
-    void setVelocity(Vec2i v) { m_velocity = v; }
-    void setSpeed(int s) { m_speed = s; }
+    void set_velocity(Vec2i v) { m_velocity = v; }
+    void set_speed(int s) { m_speed = s; }
     void set_x(int n);
     void set_y(int n);
 
     void move();
-    void updateBoundingBox();
+    void update_box();
 
 //  virtual void set_center();
     void set_move(int& key);
@@ -54,7 +57,6 @@ public:
 //  double get_radius() const { return m_radius; }
 
 protected:
-    int m_delta;
     //  double m_radius;  // radius circle in AABB
 //    SDL_Rect* m_sampleRect;
 
@@ -62,16 +64,12 @@ protected:
     bool m_move_down;
     bool m_move_left;
     bool m_move_right;
-
     Vec2i center;
-    Vec2f m_speed;
-//  int m_speed;
 
-    // ===========
-
-    int m_x;
-    int m_y;
-    Vec2i m_velocity;
+    int m_speed{0};
+    int m_x{0};
+    int m_y{0};
+    Vec2i m_velocity{0, 0};
     T* m_object;
 
 };
@@ -80,22 +78,23 @@ template<typename T>
 void GameObject<T>::move()
 {
     m_x += m_velocity.x;
-    m_x += m_velocity.y;
-    updateBoundingBox();
+    m_y += m_velocity.y;
+    update_box();
 }
 
+////////////////////////===========
 template<typename T>
 void GameObject<T>::set_x(int n)
 {
     m_x = n;
-    updateBoundingBox();
+    update_box();
 }
 
 template<typename T>
 void GameObject<T>::set_y(int n)
 {
     m_y = n;
-    updateBoundingBox();
+    update_box();
 }
 
 template<typename T>
@@ -103,69 +102,55 @@ void GameObject<T>::set_move(int& key)
 {
 
     switch (key) {
-    case SDLK_UP:m_move_up = true;
-        m_speed.y = -10;
-    case SDLK_w:m_move_up = true;
-        m_speed.y = -10;
-        break;
-    case SDLK_DOWN:m_move_down = true;
-        m_speed.y = 10;
-    case SDLK_s:m_move_down = true;
-        m_speed.y = 10;
-        break;
-    case SDLK_RIGHT:m_move_right = true;
-        m_speed.x = 10;
-    case SDLK_d:m_move_right = true;
-        m_speed.x = 10;
-        break;
-    case SDLK_LEFT:m_move_left = true;
-        m_speed.x = -10;
-    case SDLK_a:m_move_left = true;
-        m_speed.x = -10;
-        break;
+        case SDLK_UP:m_move_up = true;
+            m_velocity.y = -m_speed;
+            break;
+        case SDLK_w:m_move_up = true;
+            m_velocity.y = -m_speed;
+            break;
+        case SDLK_DOWN:m_move_down = true;
+            m_velocity.y = m_speed;
+            break;
+        case SDLK_s:m_move_down = true;
+            m_velocity.y = m_speed;
+            break;
     }
 }
 template<typename T>
 void GameObject<T>::disable_move(int& key)
 {
     switch (key) {
-    case SDLK_UP:m_move_up = false;
-        m_speed.y = 0;
-    case SDLK_w:m_move_up = false;
-        m_speed.y = 0;
-        break;
-    case SDLK_DOWN:m_move_down = false;
-        m_speed.y = 0;
-    case SDLK_s:m_move_down = false;
-        m_speed.y = 0;
-        break;
-    case SDLK_RIGHT:m_move_right = false;
-        m_speed.x = 0;
-    case SDLK_d:m_move_right = false;
-        m_speed.x = 0;
-        break;
-    case SDLK_LEFT:m_move_left = false;
-        m_speed.x = 0;
-    case SDLK_a:m_move_left = false;
-        m_speed.x = 0;
-        break;
+        case SDLK_UP:m_move_up = false;
+            m_velocity.y = 0;
+            break;
+        case SDLK_w:m_move_up = false;
+            m_velocity.y = 0;
+            break;
+        case SDLK_DOWN:m_move_down = false;
+            m_velocity.y = 0;
+            break;
+        case SDLK_s:m_move_down = false;
+            m_velocity.y = 0;
+            break;
     }
 }
 template<typename T>
 void GameObject<T>::moving()
 {
+    cout << "moving  Player";
     if (m_move_up) {
-        if (m_object->y - m_delta > 0)
-            m_object->y -= m_delta;
+        if (m_y - m_speed > 0)
+            m_y -= m_speed;
         else
-            m_object->y = 0;
+            m_y = 0;
     }
     if (m_move_down) {
-        if (m_object->y + m_delta < H - 50)
-            m_object->y += m_delta;
+        if (m_y + m_speed < H - PLAYER_H)
+            m_y += m_speed;
         else
-            m_object->y = H - 50;
+            m_y = H - PLAYER_H;
     }
+    update_box();
 //  set_center();
 }
 

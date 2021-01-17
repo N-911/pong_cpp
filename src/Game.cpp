@@ -36,13 +36,13 @@ Game::Game()
     m_window = new Window(*m_event_manager);
 
     m_ball = std::unique_ptr<Ball>(new Ball(W / 2, H / 2));
-    m_left = std::unique_ptr<Player>(new Player(*m_event_manager));
+    m_left = std::unique_ptr<Player>(new Player(*m_event_manager, 0));
 
     if (m_number_pl == 1) {
 //        m_right = std::unique_ptr<Bot>(new Bot());
     }
     else {
-        m_right = std::unique_ptr<Player>(new Player(*m_event_manager));  //Player
+        m_right = std::unique_ptr<Player>(new Player(*m_event_manager, 1));  //Player
     }
     m_pause = false;
 }
@@ -178,10 +178,9 @@ void Game::game_loop()
                 case (GameState::GameScreen): {
                     if (event.type == SDLK_SPACE)
                         m_pause = !m_pause;
-                    else {
+                    if (!m_pause) {
                         m_event_manager->ChangeStatus(event);
                     }
-
                 }
                 default:break;
             }
@@ -207,13 +206,16 @@ void Game::render_scene()
         }
         case (GameState::GameScreen) : {
 
-            cout << "Game Screen" << endl;
+//            cout << "Game Screen" << endl;
 
             SDL_SetRenderDrawColor(m_window->getRender(), 0, 0, 0, 0);
             SDL_RenderClear(m_window->getRender());
             SDL_RenderCopy(m_window->getRender(), m_window->getTexture(), NULL, NULL);
             SDL_SetRenderDrawColor(m_window->getRender(), 255, 255, 255, 1);
-            cout << "m_left x =" << m_left->get_rect()->x << "m_left y=" << m_left->get_rect()->y;
+
+            cout << "m_left x =" << m_left->get_rect()->x << "m_left x=" << m_left->get_rect()->x << endl;
+            cout << "m_left y =" << m_left->get_rect()->x << "m_left y=" << m_left->get_rect()->y << endl;
+
             SDL_RenderFillRect(m_window->getRender(), m_left->get_rect());
             SDL_RenderFillRect(m_window->getRender(), m_right->get_rect());
             SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 1, 1);
