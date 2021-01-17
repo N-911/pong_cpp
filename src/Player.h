@@ -11,9 +11,8 @@ public:
     Player(EventManager& observable, int side);
     virtual ~Player() override;
 
-    void UpdateStatus(SDL_Event& event) override;
-
-    void check_move() ;
+    void update_status(SDL_Event& event) override;
+    void check_move();
     void move_up();
     void move_down();
     void stop();
@@ -21,12 +20,9 @@ public:
 private:
     EventManager& m_observer;
     const int m_side;
+    int m_current_id;
 
     void process_event(SDL_Event& event);
-
-//    SDL_Event* m_event_key {nullptr};
-//    const int    m_id;
-    int m_current_id;
 };
 
 #endif //PONG_SRC_PLAYER_H_

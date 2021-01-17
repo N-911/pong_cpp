@@ -13,11 +13,9 @@ Window::Window(EventManager& observable)
     init_window_and_renderer();
     setup_window_icon();
 
-    m_observer.Attach(this);
+    m_observer.attach(this);
     cout << "Attach Window to observer id =" << ++m_observer_id << endl;
     this->m_current_id = m_observer_id;
-
-//    m_state = GameState::MainMenu;
 
     m_surface = NULL;
     m_texture = NULL;
@@ -137,36 +135,7 @@ void Window::setup_window_icon()
     // ...and can now free the appicon surface
     SDL_FreeSurface(iconSurface);
 }
-void Window::UpdateStatus(SDL_Event& event)
+
+void Window::update_status(SDL_Event& event)
 {
-
-    /*
-    switch (m_state) {
-
-    case (GameState::MainMenu): {
-
-        if (event == SDL_QUIT) {
-            m_loop = SDL_FALSE;
-            break;
-        }
-
-        if (event == SDL_KEYDOWN) {
-            cout << "SDL_KEYDOWN pressed" << endl;
-        }
-        else if (event == SDL_KEYUP) {
-            cout << "SDL_KEYUP pressed" << endl;
-        }
-        else if (event == SDLK_KP_ENTER) {
-            cout << "enter pressed" << endl;
-        }
-    }
-    case (GameState::GameScreen): { ;
-    }
-    case (GameState::ScoreScreen): { ;
-    }
-    default:break;
-    }
-
-     */
-
 }

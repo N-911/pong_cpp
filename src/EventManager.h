@@ -13,9 +13,9 @@ public:
 
    void ChangeStatus(SDL_Event& event);
 
-    virtual void Attach(IObserver *observer) override;
-    virtual void Detach(IObserver *observer) override;
-    virtual void Notify(SDL_Event& event) override;
+    virtual void attach(IObserver *observer) override;
+    virtual void detach(IObserver *observer) override;
+    virtual void notify(SDL_Event& event) override;
 
 private:
     std::list<IObserver *> m_list_observer;

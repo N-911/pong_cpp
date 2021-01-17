@@ -8,26 +8,26 @@ EventManager::~EventManager()
     cout << "EventManager destructor";
 }
 
-void EventManager::Attach(IObserver* observer)
+void EventManager::attach(IObserver* observer)
 {
     m_list_observer.push_back(observer);
 }
-void EventManager::Detach(IObserver* observer)
+void EventManager::detach(IObserver* observer)
 {
     m_list_observer.remove(observer);
 }
 
-void EventManager::Notify(SDL_Event& event)
+void EventManager::notify(SDL_Event& event)
 {
     for (auto observer : m_list_observer) {
-        observer->UpdateStatus(event);
+        observer->update_status(event);
     }
 }
 
 void EventManager::ChangeStatus(SDL_Event& event)
 {
 //    m_event_type = event;
-    Notify(event);
+    notify(event);
 }
 
 

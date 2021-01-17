@@ -5,11 +5,10 @@
 #include <SDL_types.h>
 #include <SDL_events.h>
 
-class IObserver
-{
+class IObserver {
 public:
-  virtual ~IObserver() { };
-  virtual void UpdateStatus(SDL_Event& event) = 0;
+    virtual ~IObserver() { };
+    virtual void update_status(SDL_Event& event) = 0;
 
 protected:
     static int m_observer_id;

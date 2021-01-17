@@ -5,12 +5,6 @@
 #include "IObserver.h"
 #include "EventManager.h"
 
-//enum class GameState {
-//    MainMenu,
-//    GameScreen,
-//    ScoreScreen,
-//};
-
 class Window : public IObserver {
 
 public:
@@ -18,11 +12,11 @@ public:
 
     virtual ~Window();
 
-    void UpdateStatus(SDL_Event& event) override;
+    void update_status(SDL_Event& event) override;
 
-    TTF_Font* getShrift() const { return m_shrift; }
-    SDL_Renderer* getRender() const { return m_renderer; }
-    SDL_Texture* getTexture() { return m_texture; }
+    TTF_Font* get_shrift() const { return m_shrift; }
+    SDL_Renderer* get_render() const { return m_renderer; }
+    SDL_Texture* get_texture() { return m_texture; }
 
 private:
     SDL_Window* m_window;
@@ -31,8 +25,6 @@ private:
     SDL_Renderer* m_renderer;
     SDL_Texture* m_texture;
     SDL_Color m_text_color;
-//    GameState m_state;
-//    SDL_Event* m_event_key {nullptr};
     EventManager& m_observer;
     int m_current_id;
 

@@ -69,8 +69,8 @@ int Game::show_menu()
 
     SDL_Surface* menus[num_menu];
 
-    menus[0] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[0], color[0]);
-    menus[1] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[1], color[0]);
+    menus[0] = TTF_RenderText_Solid(m_window->get_shrift(), menu_point[0], color[0]);
+    menus[1] = TTF_RenderText_Solid(m_window->get_shrift(), menu_point[1], color[0]);
 
     SDL_Rect pos[num_menu];
 
@@ -109,14 +109,14 @@ int Game::show_menu()
                             if (!selected[i]) {
                                 selected[i] = 1;
                                 SDL_FreeSurface(menus[i]);
-                                menus[i] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[i], color[1]);
+                                menus[i] = TTF_RenderText_Solid(m_window->get_shrift(), menu_point[i], color[1]);
                             }
                         }
                         else {
                             if (selected[i]) {
                                 selected[i] = 0;
                                 SDL_FreeSurface(menus[i]);
-                                menus[i] = TTF_RenderText_Solid(m_window->getShrift(), menu_point[i], color[0]);
+                                menus[i] = TTF_RenderText_Solid(m_window->get_shrift(), menu_point[i], color[0]);
 
                             }
                         }
@@ -142,14 +142,14 @@ int Game::show_menu()
             SDL_BlitSurface(menus[i], NULL, screen, &pos[i]);
         }
 
-        texture = SDL_CreateTextureFromSurface(m_window->getRender(), screen);
+        texture = SDL_CreateTextureFromSurface(m_window->get_render(), screen);
         SDL_Rect rect;
         SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
         rect.x = (W - rect.w) / 2;
         rect.y = (H - rect.h) / 2;
-        SDL_RenderClear(m_window->getRender());
-        SDL_RenderCopy(m_window->getRender(), texture, NULL, &rect);
-        SDL_RenderPresent(m_window->getRender());
+        SDL_RenderClear(m_window->get_render());
+        SDL_RenderCopy(m_window->get_render(), texture, NULL, &rect);
+        SDL_RenderPresent(m_window->get_render());
     }
 }
 
@@ -165,7 +165,6 @@ void Game::game_loop()
             m_frame_count = 0;
         }
 //        cout << "fps =" << m_fps << endl;
-
         while (SDL_PollEvent(&event)) {
             switch (m_state) {
                 case (GameState::MainMenu): {
@@ -176,10 +175,20 @@ void Game::game_loop()
                     }
                 }
                 case (GameState::GameScreen): {
-                    if (event.type == SDLK_SPACE)
-                        m_pause = !m_pause;
-                    if (!m_pause) {
+                    if (event.type == SDL_KEYDOWN) {
+                        if (event.key.keysym.sym == SDLK_ESCAPE) {
+                            m_loop = SDL_FALSE;
+                            break;
+                        }
+                        if (event.key.keysym.sym == SDLK_SPACE) {
+                            m_pause = !m_pause;
+                            cout << "m_pause =" << std::boolalpha << m_pause << endl;
+                            break;
+                        }
+                    }
+                    if (m_pause == SDL_FALSE) {
                         m_event_manager->ChangeStatus(event);
+                        break;
                     }
                 }
                 default:break;
@@ -192,7 +201,7 @@ void Game::game_loop()
 
 void Game::render_scene()
 {
-    SDL_RenderClear(m_window->getRender());
+    SDL_RenderClear(m_window->get_render());
 
     m_frame_count++;
     int timerFPS = SDL_GetTicks() - m_last_frame;
@@ -208,21 +217,21 @@ void Game::render_scene()
 
 //            cout << "Game Screen" << endl;
 
-            SDL_SetRenderDrawColor(m_window->getRender(), 0, 0, 0, 0);
-            SDL_RenderClear(m_window->getRender());
-            SDL_RenderCopy(m_window->getRender(), m_window->getTexture(), NULL, NULL);
-            SDL_SetRenderDrawColor(m_window->getRender(), 255, 255, 255, 1);
+            SDL_SetRenderDrawColor(m_window->get_render(), 0, 0, 0, 0);
+            SDL_RenderClear(m_window->get_render());
+            SDL_RenderCopy(m_window->get_render(), m_window->get_texture(), NULL, NULL);
+            SDL_SetRenderDrawColor(m_window->get_render(), 255, 255, 255, 1);
 
-            cout << "m_left x =" << m_left->get_rect()->x << "m_left x=" << m_left->get_rect()->x << endl;
-            cout << "m_left y =" << m_left->get_rect()->x << "m_left y=" << m_left->get_rect()->y << endl;
+//            cout << "m_left x =" << m_left->get_rect()->x << "m_left x=" << m_left->get_rect()->x << endl;
+//            cout << "m_left y =" << m_left->get_rect()->x << "m_left y=" << m_left->get_rect()->y << endl;
 
-            SDL_RenderFillRect(m_window->getRender(), m_left->get_rect());
-            SDL_RenderFillRect(m_window->getRender(), m_right->get_rect());
-            SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 1, 1);
-
-//  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
+            SDL_RenderFillRect(m_window->get_render(), m_left->get_rect());
+            SDL_SetRenderDrawColor(m_window->get_render(), 255, 255, 0, 255);
+            SDL_RenderFillRect(m_window->get_render(), m_right->get_rect());
+            SDL_SetRenderDrawColor(m_window->get_render(), 255, 0, 1, 1);
+            SDL_RenderFillRect(m_window->get_render(), m_ball->get_rect());
 //  draw_score();
-            SDL_RenderPresent(m_window->getRender());
+            SDL_RenderPresent(m_window->get_render());
         }
         default: break;
     }
@@ -231,12 +240,12 @@ void Game::render_scene()
 
 void Game::update()
 {
-    m_left->moving();
+//    m_left->moving();
 //  if (m_number_pl == 2)
 //    m_right->moving();
 //  else
-    m_right->moving();
-    m_ball->moving();
+//    m_right->moving();
+//    m_ball->moving();
 
     // reset all position
     if (int win_side = check_goal(); win_side != -1) {
@@ -252,7 +261,7 @@ void Game::update()
 
 void Game::render(float interpolation)
 {
-    SDL_RenderClear(m_window->getRender());
+    SDL_RenderClear(m_window->get_render());
 
     m_frame_count++;
     int timerFPS = SDL_GetTicks() - m_last_frame;
@@ -268,16 +277,16 @@ void Game::render(float interpolation)
 //  m_ball->set_rect_x(ball_view_position_x);
 //  m_ball->set_rect_y(ball_view_position_y);
 
-    SDL_SetRenderDrawColor(m_window->getRender(), 0, 0, 0, 0);
-    SDL_RenderClear(m_window->getRender());
-    SDL_RenderCopy(m_window->getRender(), m_window->getTexture(), NULL, NULL);
-    SDL_SetRenderDrawColor(m_window->getRender(), 255, 255, 255, 1);
-    SDL_RenderFillRect(m_window->getRender(), m_left->get_rect());
-    SDL_RenderFillRect(m_window->getRender(), m_right->get_rect());
-    SDL_SetRenderDrawColor(m_window->getRender(), 255, 0, 0, 1);
+    SDL_SetRenderDrawColor(m_window->get_render(), 0, 0, 0, 0);
+    SDL_RenderClear(m_window->get_render());
+    SDL_RenderCopy(m_window->get_render(), m_window->get_texture(), NULL, NULL);
+    SDL_SetRenderDrawColor(m_window->get_render(), 255, 255, 255, 1);
+    SDL_RenderFillRect(m_window->get_render(), m_left->get_rect());
+    SDL_RenderFillRect(m_window->get_render(), m_right->get_rect());
+    SDL_SetRenderDrawColor(m_window->get_render(), 255, 0, 0, 1);
 //  SDL_RenderFillRect(m_window.getRender(), m_ball->get_rect());
 //  draw_score();
-    SDL_RenderPresent(m_window->getRender());
+    SDL_RenderPresent(m_window->get_render());
 }
 
 void Game::draw_score()
@@ -286,9 +295,9 @@ void Game::draw_score()
     text += std::to_string(m_game_play->get_score()[0]);
     text += " : ";
     text += std::to_string(m_game_play->get_score()[1]);
-    m_score_surface = TTF_RenderText_Solid(m_window->getShrift(), text.c_str(), m_text_color);
-    m_score_texture = SDL_CreateTextureFromSurface(m_window->getRender(), m_score_surface);
-    SDL_RenderCopy(m_window->getRender(), m_score_texture, NULL, &m_score_board);
+    m_score_surface = TTF_RenderText_Solid(m_window->get_shrift(), text.c_str(), m_text_color);
+    m_score_texture = SDL_CreateTextureFromSurface(m_window->get_render(), m_score_surface);
+    SDL_RenderCopy(m_window->get_render(), m_score_texture, NULL, &m_score_board);
     SDL_DestroyTexture(m_score_texture);
     SDL_FreeSurface(m_score_surface);
 }
@@ -314,8 +323,6 @@ int Game::check_goal()
     return -1;
 }
 
-
-
 void Game::on_event(SDL_Event& event)
 {
     switch (event.type) {
@@ -337,24 +344,24 @@ void Game::on_event(SDL_Event& event)
             }
             if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
                     event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-                m_left->set_move(event.key.keysym.sym);
+//                m_left->set_move(event.key.keysym.sym);
             }
             if (m_number_pl == 2) {
                 if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
                         event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-                    m_right->set_move(event.key.keysym.sym);
+//                    m_right->set_move(event.key.keysym.sym);
                 }
             }
             break;
         case SDL_KEYUP:
             if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
                     event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT) {
-                m_left->disable_move(event.key.keysym.sym);
+//                m_left->disable_move(event.key.keysym.sym);
             }
             if (m_number_pl == 2) {
                 if (event.key.keysym.sym == SDLK_w || event.key.keysym.sym == SDLK_s ||
                         event.key.keysym.sym == SDLK_d || event.key.keysym.sym == SDLK_a) {
-                    m_right->disable_move(event.key.keysym.sym);
+//                    m_right->disable_move(event.key.keysym.sym);
                 }
             }
             break;

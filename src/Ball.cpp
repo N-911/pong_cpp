@@ -7,7 +7,13 @@ using std::endl;
 
 Ball::Ball(int x, int y)
 {
-//  m_object = new SDL_Rect();
+    m_x = W / 2;
+    m_y = H / 2;
+    update_box();
+    m_object->w = BALL_SIZE;
+    m_object->h = BALL_SIZE;
+    m_speed = 12;
+
 }
 
 

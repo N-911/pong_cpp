@@ -41,6 +41,9 @@ private:
     std::unique_ptr<Ball> m_ball;
     std::unique_ptr<Player> m_left;
     std::unique_ptr<Player> m_right;
+
+//    std::vector<std::unique_ptr<GameObject <SDL_Rect>*>> m_game_obj;
+
 //    std::unique_ptr<Bot> m_right;
 
 //  std::unique_ptr<Label>  _scoreLabel;

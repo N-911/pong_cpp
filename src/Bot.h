@@ -12,7 +12,7 @@ public:
     virtual ~Bot() { }
 
     void move_to_ball();
-    void moving() override { };
+//    void moving() override { };
 
 };
 

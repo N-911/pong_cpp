@@ -4,34 +4,6 @@
 using std::cout;
 using std::endl;
 
-/*
-GameObject::GameObject() {
-  cout << "consturctor GameObject" << endl;
-  m_sampleRect = new SDL_Rect();
-  m_side = side;
-
-  if (side == 0) {
-    m_sampleRect->x = 0;
-    m_sampleRect->y = (H - PLAYER_H) / 2;
-  } else {
-    m_sampleRect->x = W - PLAYER_W;
-    m_sampleRect->y = (H - PLAYER_H) / 2;
-  }
-  m_sampleRect->w = PLAYER_W;
-  m_sampleRect->h = PLAYER_H;
-  speed.x = 0;
-  speed.y = 0;
-
-  m_move_up = false;
-  m_move_down = false;
-  m_move_left = false;
-  m_move_right = false;
-//  m_delta = 5;
-  m_radius = PLAYER_W / 2;
-  set_center();
-}
-*/
-
 template<>
 void GameObject<Circle>::update_box()
 {
@@ -56,36 +28,20 @@ void GameObject::set_center() {
  */
 
 
+//void GameObject::move_start() {
+//  if (m_side == 0) {
+//    m_sampleRect->x = 0;
+//  } else if (m_side == 1) {
+//    m_sampleRect->x = W - PLAYER_W;
+//  }
+//  m_sampleRect->y = H / 2 - PLAYER_H / 2;
+//  speed.x = 0;
+//  speed.y = 0;
+//  set_center();
+//}
+
 
 /*
-void GameObject::moving() {
-  if (m_move_up) {
-    if (m_sampleRect->y - m_delta > 0)
-      m_sampleRect->y -= m_delta;
-    else
-      m_sampleRect->y = 0;
-  }
-  if (m_move_down) {
-    if (m_sampleRect->y + m_delta < H - 50)
-      m_sampleRect->y += m_delta;
-    else
-      m_sampleRect->y = H - 50;
-  }
-  set_center();
-}
-
-void GameObject::move_start() {
-  if (m_side == 0) {
-    m_sampleRect->x = 0;
-  } else if (m_side == 1) {
-    m_sampleRect->x = W - PLAYER_W;
-  }
-  m_sampleRect->y = H / 2 - PLAYER_H / 2;
-  speed.x = 0;
-  speed.y = 0;
-  set_center();
-}
-
 void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 
   double Dx = m_ball->get_center().x - this->get_center().x;

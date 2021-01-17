@@ -4,11 +4,11 @@
 #include "IObserver.h"
 
 class IEventManager {
-    public:
-        virtual ~IEventManager() {};
-        virtual void Attach(IObserver *observer) = 0;
-        virtual void Detach(IObserver *observer) = 0;
-        virtual void Notify(SDL_Event& event) = 0;
-    };
+public:
+    virtual ~IEventManager() { };
+    virtual void attach(IObserver* observer) = 0;
+    virtual void detach(IObserver* observer) = 0;
+    virtual void notify(SDL_Event& event) = 0;
+};
 
 #endif //PONG_IEVENTMANAGER_H
