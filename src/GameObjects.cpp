@@ -4,15 +4,28 @@
 using std::cout;
 using std::endl;
 
-template<>
-void GameObject<Circle>::update_box()
-{
-    m_object->x = m_x + m_object->r;
-    m_object->y = m_y + m_object->r;
+GameObject::GameObject() {
+    m_object = new SDL_Rect();
 }
 
-template<>
-void GameObject<SDL_Rect>::update_box()
+//GameObject::~GameObject()
+//{
+//    delete m_object;
+//}
+
+void GameObject::set_x(int n)
+{
+    m_x = n;
+    update_box();
+}
+
+void GameObject::set_y(int n)
+{
+    m_y = n;
+    update_box();
+}
+
+void GameObject::update_box()
 {
     m_object->x = m_x;
     m_object->y = m_y;
@@ -26,6 +39,13 @@ void GameObject::set_center() {
 }
 
  */
+
+
+//void GameObject::update_box()
+//{
+//    m_object->x = m_x + m_object->r;
+//    m_object->y = m_y + m_object->r;
+//}
 
 
 //void GameObject::move_start() {

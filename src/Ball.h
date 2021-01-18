@@ -3,13 +3,15 @@
 
 #include "GameObjects.h"
 
-class Ball : public GameObject<SDL_Rect> {
+class Ball : public GameObject {
 
 public:
     Ball() = default;
     Ball(int x, int y);
 
     virtual ~Ball() { }
+    void move() override;
+    void set_new_ball(int side);
 private:
 
 };

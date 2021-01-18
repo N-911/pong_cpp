@@ -11,25 +11,17 @@ using std::cout;
 
 class Ball;
 
-template<typename T>
 class GameObject {
 
 public:
     // Constructors
-    GameObject()
-    {
-        m_object = new T();
-    }
+    GameObject();
     GameObject(GameObject& other) = delete;
     GameObject& operator=(GameObject& other) = delete;
     GameObject(GameObject&& other) = delete;
     GameObject& operator=(GameObject&& other) = delete;
 
-    // Destructor
-    ~GameObject()
-    {
-        delete m_object;
-    }
+    ~GameObject() = default;
 
     // get
     Vec2i velocity() const { return m_velocity; }
@@ -40,7 +32,7 @@ public:
     void set_speed(int s) { m_speed = s; }
     void set_x(int n);
     void set_y(int n);
-    void move();
+    virtual void move() = 0;
 
 //    virtual void moving();
 //    virtual void moving(std::shared_ptr<Ball> ball) { };
@@ -52,31 +44,10 @@ protected:
     int m_x{0};
     int m_y{0};
     Vec2i m_velocity{0, 0};
-    T* m_object;
+    SDL_Rect* m_object;
 
     void update_box();
 };
 
-template<typename T>
-void GameObject<T>::move()
-{
-    m_x += m_velocity.x;
-    m_y += m_velocity.y;
-    update_box();
-}
-
-template<typename T>
-void GameObject<T>::set_x(int n)
-{
-    m_x = n;
-    update_box();
-}
-
-template<typename T>
-void GameObject<T>::set_y(int n)
-{
-    m_y = n;
-    update_box();
-}
 
 #endif //PONG_SRC_GAMEOBJECTS_H_

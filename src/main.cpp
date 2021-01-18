@@ -8,6 +8,6 @@ int main()
 
     Game game;
     game.game_loop();
-//  system ("leaks -q pong");
+  system ("leaks -q pong");
     return (0);
 }

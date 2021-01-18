@@ -99,4 +99,10 @@ void Player::check_move()
         update_box();
     }
 }
+void Player::move()
+{
+    m_x += m_velocity.x;
+    m_y += m_velocity.y;
+    update_box();
+}
 

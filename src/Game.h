@@ -17,8 +17,6 @@ enum class GameState {
     ScoreScreen,
 };
 
-
-
 class Game {
 public:
     Game();
@@ -27,7 +25,7 @@ public:
 
 private:
     SDL_Event m_ev;
-    EventManager* m_event_manager;
+    std::shared_ptr<EventManager> m_event_manager;
     Window* m_window;
     GameState m_state;
     SDL_bool m_loop;
@@ -39,18 +37,13 @@ private:
     bool m_pause {false};
 
     std::unique_ptr<Ball> m_ball;
-    std::unique_ptr<Player> m_left;
-    std::unique_ptr<Player> m_right;
-
-//    std::vector<std::unique_ptr<GameObject <SDL_Rect>*>> m_game_obj;
-
+    std::vector<std::unique_ptr<GameObject>> m_game_obj;
 //    std::unique_ptr<Bot> m_right;
-
 //  std::unique_ptr<Label>  _scoreLabel;
 //  std::unique_ptr<Label> _countdownTimer;
 //  std::unique_ptr<Label> _controlsLabel
 
-    GamePlayController* m_game_play;
+    std::unique_ptr<GamePlayController> m_game_play;
     SDL_Surface* m_score_surface;
     SDL_Texture* m_score_texture;
     SDL_Color m_text_color;
@@ -60,7 +53,6 @@ private:
 //  bool		play_mus;
 
     int show_menu();
-
 //    void switch_state();
     void on_event(SDL_Event& event);
     void update();

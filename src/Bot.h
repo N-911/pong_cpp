@@ -5,7 +5,7 @@
 
 class Ball;
 
-class Bot : public GameObject<SDL_Rect> {
+class Bot : public GameObject {
 
 public:
     Bot();

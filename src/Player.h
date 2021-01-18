@@ -5,7 +5,7 @@
 #include "EventManager.h"
 
 class Player :
-        public GameObject<SDL_Rect>, public IObserver {
+        public GameObject, public IObserver {
 
 public:
     Player(EventManager& observable, int side);
@@ -16,6 +16,7 @@ public:
     void move_up();
     void move_down();
     void stop();
+    void move() override;
 
 private:
     EventManager& m_observer;

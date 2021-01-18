@@ -12,10 +12,39 @@ Ball::Ball(int x, int y)
     update_box();
     m_object->w = BALL_SIZE;
     m_object->h = BALL_SIZE;
-    m_speed = 12;
+    m_speed = 5;
+    set_velocity(Vec2i{m_speed, m_speed});
 
 }
+void Ball::move()
+{
+    if (((m_y + m_velocity.y) > H) || ((m_y + m_velocity.y) < 0)) {
+        m_velocity.y = -m_velocity.y;
+    }
+    m_y += m_velocity.y;
+    m_x += m_velocity.x;
+    update_box();
+//    cout << "ball x =" << m_object->x << " ball y =" << m_object->y << endl;
+    cout << "ball x =" << m_x << " ball y =" << m_y << endl;
+}
 
+void Ball::set_new_ball(int side)
+{
+    if (side == 0) {
+        m_velocity.x = -m_speed;
+    }
+    else if (side == 1) {
+        m_velocity.x = m_speed;
+//        m_velocity.y = -m_speed;
+    }
+    m_x = W / 2 - BALL_SIZE / 2;
+    m_y = H / 2 + BALL_SIZE / 2;
+
+        cout << "ball velocity x =" << m_velocity.x << " y =" << m_velocity.y << endl;
+    update_box();
+//    set_center();
+//    m_radius = BALL_SIZE / std::sqrt(2.0);
+}
 
 /*
 void Ball::set_center() {
@@ -41,21 +70,7 @@ bool Ball::is_movind() const {
   return speed.x != 0 || speed.y != 0;
 }
 
-void Ball::set_new_ball(int side) {
-  if (side == 0) {
-    speed.x = 5;
-  } else if (side == 1) {
-    speed.x = -5;
-  }
 
-  m_sampleRect->x = W / 2 - BALL_SIZE / 2;
-  m_sampleRect->y = H / 2 + BALL_SIZE / 2;
-  m_sampleRect->w = BALL_SIZE;
-  m_sampleRect->h = BALL_SIZE;
-  speed.y = 0;
-  set_center();
-  m_radius = BALL_SIZE / std::sqrt(2.0);
-}
 
 void Ball::set_rect_x(int x) {
   m_sampleRect->x = x;
