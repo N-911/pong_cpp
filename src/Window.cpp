@@ -13,25 +13,14 @@ Window::Window(EventManager& observable)
     init_window_and_renderer();
     setup_window_icon();
 
+    // register Observer
     m_observer.attach(this);
     cout << "Attach Window to observer id =" << ++m_observer_id << endl;
     this->m_current_id = m_observer_id;
 
-    m_surface = NULL;
-    m_texture = NULL;
-    // Load image at specified path
-    m_surface = IMG_Load("resources/floor.png");
-    if (m_surface == NULL) {
-        printf("[Error] Unable to load image : %s\n", SDL_GetError());
-        exit(0);
-    }
-    else {
-        m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
-        if (m_texture == NULL) {
-            printf("[Error] Unable to create texture : %s\n", SDL_GetError());
-        }
-        SDL_FreeSurface(m_surface);
-    }
+    m_textures["background"] = load_texture("resources/floor.png");
+    m_textures["ball"] = load_texture("resources/red_ball.dms");
+
     m_text_color.r = 255;
     m_text_color.g = 255;
     m_text_color.b = 0;
@@ -48,10 +37,31 @@ Window::~Window()
 //  Mix_FreeMusic(m_goal);
     Mix_CloseAudio();
 
-    SDL_DestroyTexture(m_texture);
+    for (auto key : m_textures)
+        SDL_DestroyTexture(key.second);
+
     SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
     SDL_Quit();
+}
+
+
+SDL_Texture* Window::load_texture(const char* file) {
+
+    SDL_Texture* newTexture = NULL;
+
+    SDL_Surface* loadedSurface = IMG_Load(file);
+    if (loadedSurface == NULL) {
+        std::cout << "Unable to load image " << file << ". SDL_image error: " << IMG_GetError() << "\n";
+    }
+    else {
+        newTexture = SDL_CreateTextureFromSurface(m_renderer, loadedSurface);
+        if (newTexture == NULL) {
+            std::cout << "Unable to create texture from " << file << ". SDL Error: " << SDL_GetError() << "\n";
+        }
+        SDL_FreeSurface(loadedSurface);
+    }
+    return newTexture;
 }
 
 void Window::init_SDL()
@@ -106,11 +116,14 @@ void Window::create_window()
         cout << SDL_GetError() << endl;
         exit(1);
     }
-    if (!(m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888,
-            SDL_TEXTUREACCESS_STREAMING, W, H))) {
-        cout << SDL_GetError() << endl;
-        exit(1);
-    }
+
+
+
+//    if (!(m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888,
+//            SDL_TEXTUREACCESS_STREAMING, W, H))) {
+//        cout << SDL_GetError() << endl;
+//        exit(1);
+//    }
 }
 
 void Window::init_window_and_renderer()
@@ -139,3 +152,28 @@ void Window::setup_window_icon()
 void Window::update_status(SDL_Event& event)
 {
 }
+
+SDL_Texture* Window::get_texture(std::string key)
+{
+    if (m_textures.count(key)) {
+        return m_textures[key];
+    }
+    return nullptr;
+}
+
+
+// Load image at specified path
+/*
+m_surface = IMG_Load("resources/floor.png");
+if (m_surface == NULL) {
+    printf("[Error] Unable to load image : %s\n", SDL_GetError());
+    exit(0);
+}
+else {
+    m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
+    if (m_texture == NULL) {
+        printf("[Error] Unable to create texture : %s\n", SDL_GetError());
+    }
+    SDL_FreeSurface(m_surface);
+}
+ */

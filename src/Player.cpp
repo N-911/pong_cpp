@@ -12,7 +12,7 @@ Player::Player(EventManager& observable, int side)
     m_observer.attach(this);
     cout << "Attach Player to observer id =" << ++m_observer_id << endl;
     this->m_current_id = m_observer_id;
-    m_speed = 10;  // speed player moving up or down
+    m_speed = 12;  // speed player moving up or down
     if (m_side == 0) {
         m_x = 0;
     }
@@ -35,7 +35,7 @@ void Player::update_status(SDL_Event& event)
     cout << "Player::UpdateStatus side = " << m_side << endl;
     process_event(event);
     move();
-    check_move();
+//    check_move();
 }
 
 void Player::process_event(SDL_Event& event)
@@ -86,23 +86,80 @@ void Player::stop()
     set_velocity(Vec2i{0, 0});
 }
 
-void Player::check_move()
-{
-    if (m_y < 0) {
-        m_y = 0;
-        update_box();
-        stop();
-    }
-    if (m_y > H - PLAYER_H) {
-        m_y = H - PLAYER_H;
-        stop();
-        update_box();
-    }
-}
+
 void Player::move()
 {
     m_x += m_velocity.x;
     m_y += m_velocity.y;
+
+    if (m_y < 0) {
+        m_y = 0;
+//        update_box();
+        stop();
+    }
+    if (m_y > H - PLAYER_H) {
+        m_y = H - PLAYER_H;
+//        update_box();
+        stop();
+    }
     update_box();
 }
 
+Vec2i Player::check_colision(Circle ball)
+{
+//    cout << "m_x = " << m_x << " m_y = " << m_y << endl;
+//    cout << "ball x = " << ball.x << " ball y = " << ball.y << endl;
+    int col_x = -1;
+    int col_y = -1;
+
+
+
+    if (ball.y > m_y + PLAYER_H) {
+        col_y = m_y + PLAYER_H;
+    }
+    else if (ball.y < m_y) {
+        col_y = m_y;
+    }
+    else
+        col_y = ball.y;
+
+    if (ball.x > m_x + PLAYER_W)
+        col_x = m_x + PLAYER_W;
+    else if (ball.x < m_x) {
+        col_x = m_x;
+    }
+    else {
+        col_x = ball.x;
+    }
+    int distance = square_of_distance(ball.x, ball.y, col_x, col_y);
+
+//    cout << "col  x = "  << col_x << " col y =" << col_y << endl;
+
+    if (distance <  ball.r * ball.r) {
+        cout << "distance = " << distance << endl;
+        return {col_x, col_y};
+    }
+    else {
+        return {-1, -1};
+    }
+}
+
+int Player::square_of_distance(int x1, int y1, int x2, int y2)
+{
+    return static_cast<int>(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+}
+
+
+//void Player::check_move()
+//{
+//    if (m_y < 0) {
+//        m_y = 0;
+//        update_box();
+//        stop();
+//    }
+//    if (m_y > H - PLAYER_H) {
+//        m_y = H - PLAYER_H;
+//        update_box();
+//        stop();
+//    }
+//}

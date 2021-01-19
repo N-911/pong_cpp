@@ -9,8 +9,8 @@
 #define FPS 40
 #define W 840
 #define H 600
-#define BALL_SIZE (16)
-#define PLAYER_H (60)
+#define BALL_SIZE (28)
+#define PLAYER_H (80)
 #define PLAYER_W (16)
 #define FONT_SIZE 32
 #define SCORE_BOURD_X (W / 2 + FONT_SIZE)

@@ -29,15 +29,11 @@ public:
 
     // modify
     void set_velocity(Vec2i v) { m_velocity = v; }
-    void set_speed(int s) { m_speed = s; }
     void set_x(int n);
     void set_y(int n);
-    virtual void move() = 0;
 
-//    virtual void moving();
-//    virtual void moving(std::shared_ptr<Ball> ball) { };
-//  virtual void move_start();
-//  void check_colision(std::shared_ptr<Ball> m_ball);
+    virtual void move() = 0;
+    virtual Vec2i check_colision(Circle ball) = 0;
 
 protected:
     int m_speed{0};
@@ -46,8 +42,7 @@ protected:
     Vec2i m_velocity{0, 0};
     SDL_Rect* m_object;
 
-    void update_box();
+   virtual void update_box();
 };
-
 
 #endif //PONG_SRC_GAMEOBJECTS_H_

@@ -1,10 +1,13 @@
 #ifndef PONG_SRC_GAMEPLAYCONTROLLER_H_
 #define PONG_SRC_GAMEPLAYCONTROLLER_H_
 #include <vector>
+#include "Settings.h"
+
+class Ball;
 
 class GamePlayController {
 public:
-    GamePlayController();
+    GamePlayController() = default;
     virtual ~GamePlayController();
     void add_score(int side);
     void check_win();
@@ -20,7 +23,6 @@ private:
     int m_count_win_left;
     int m_game_count{0};
     int m_score_target{11};  // количество очков доя победи
-
     void reset_score();
 };
 

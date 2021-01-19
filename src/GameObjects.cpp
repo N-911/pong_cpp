@@ -8,11 +8,6 @@ GameObject::GameObject() {
     m_object = new SDL_Rect();
 }
 
-//GameObject::~GameObject()
-//{
-//    delete m_object;
-//}
-
 void GameObject::set_x(int n)
 {
     m_x = n;
@@ -30,6 +25,7 @@ void GameObject::update_box()
     m_object->x = m_x;
     m_object->y = m_y;
 }
+
 
 
 /*

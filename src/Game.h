@@ -30,7 +30,6 @@ private:
     GameState m_state;
     SDL_bool m_loop;
 
-
     int m_frame_count;
     unsigned int m_last_frame;
     int m_fps{0};
@@ -38,12 +37,13 @@ private:
 
     std::unique_ptr<Ball> m_ball;
     std::vector<std::unique_ptr<GameObject>> m_game_obj;
-//    std::unique_ptr<Bot> m_right;
+
 //  std::unique_ptr<Label>  _scoreLabel;
-//  std::unique_ptr<Label> _countdownTimer;
+//  std::unique_ptr<Label> _countwdownTimer;
 //  std::unique_ptr<Label> _controlsLabel
 
     std::unique_ptr<GamePlayController> m_game_play;
+
     SDL_Surface* m_score_surface;
     SDL_Texture* m_score_texture;
     SDL_Color m_text_color;
@@ -56,10 +56,14 @@ private:
 //    void switch_state();
     void on_event(SDL_Event& event);
     void update();
+
     void render(float interpolation);
+
     void render_scene();
     void draw_score();
     int check_goal();
+
+    Vec2i ball_collision_with_player(int i, Vec2i col);
 };
 
 #endif //PONG_SRC_GAME_H_

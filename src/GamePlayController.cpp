@@ -1,13 +1,6 @@
 #include "GamePlayController.h"
 #include "Settings.h"
 
-GamePlayController::GamePlayController()
-{
-//    m_score = std::vector<int>(0, 0);
-//    m_score_target = 21;
-//    m_game_count = 0;
-}
-
 void GamePlayController::add_score(int side)
 {
     if (side == 0 || side == 1) {
@@ -42,18 +35,25 @@ GamePlayController::~GamePlayController()
 {
 
 }
+
+
 int GamePlayController::ball_collision(int x, int y)
 {
-    if (x <= 0) {
-        ++m_score[0];
-        return 1;
-    }
-    if (x >= W) {
-        ++m_score[1];
-        return 0;
-    }
-    return -1;
-}
+    int winner = -1;
 
+    if (x <= 0) {
+        winner =1;
+    }
+    if (x >= W - BALL_SIZE) {
+        winner = 0;
+    }
+
+    ++m_score[winner];
+
+    // Ball collision on platforms
+
+
+    return winner;
+}
 
 

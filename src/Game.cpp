@@ -62,7 +62,7 @@ void Game::game_loop()
             m_fps = m_frame_count;
             m_frame_count = 0;
         }
-//        cout << "fps =" << m_fps << endl;
+        cout << "fps =" << m_fps << endl;
         while (SDL_PollEvent(&event)) {
             switch (m_state) {
                 case (GameState::MainMenu): {
@@ -98,28 +98,71 @@ void Game::game_loop()
     }
 }
 
+
+Vec2i Game::ball_collision_with_player(int i, Vec2i col)
+{
+    int platform_left;
+    int platform_right;
+    int platform_top;
+    int platform_bottom;
+
+    int rectCenterX;
+    int rectCenterY;
+
+    // Move ball back one step
+    int prew_x_ball = m_ball->get_ball_geomerty().x - m_ball->velocity().x;
+    int prew_y_ball = m_ball->get_ball_geomerty().y - m_ball->velocity().y;
+
+    m_ball->set_x(prew_x_ball);
+    m_ball->set_y(prew_y_ball);
+
+
+    platform_left = m_game_obj[i]->get_rect()->x;
+    platform_right = m_game_obj[i]->get_rect()->x + PLAYER_W;
+    platform_top = m_game_obj[i]->get_rect()->y;
+    platform_bottom = m_game_obj[i]->get_rect()->y + PLAYER_H;
+
+    rectCenterX = (platform_left + platform_right) / 2;
+    rectCenterY = (platform_bottom + platform_top) / 2;
+
+    int diff_x = col.x - rectCenterX;
+    int diff_y = col.y - rectCenterY;
+    int y_magnitude = abs(diff_y / diff_x);
+
+    int y_dir_ball = m_ball->velocity().y < 0 ? -1 : 1;
+
+    int direction_multiplier_y = 1;
+
+    if (col.y - m_ball->velocity().y >= platform_bottom || col.y - m_ball->velocity().y <= platform_top)
+        direction_multiplier_y = -1;	// check if bottom or top of platform was hit
+
+    // Calculate new y velocity
+    int velocity_y = y_magnitude * y_dir_ball * direction_multiplier_y;
+
+    // Calculate new x velocity
+    int velocity_x = m_ball->velocity().x * -1;
+    return {velocity_x, velocity_y};
+
+}
+
 void Game::update()
 {
     int winner;
     m_ball->move();
     winner = m_game_play->ball_collision(m_ball->get_rect()->x, m_ball->get_rect()->y);
-    cout << "winner = " << winner << endl;
     if (winner != -1) {
-        cout << "new ball" << endl;
+//        cout << "new ball" << endl;
         m_ball->set_new_ball(winner);
     }
-//    m_game_play->check_win();
+    Vec2i colis_point;
 
-    // reset all position
-//    if (int win_side = check_goal(); win_side != -1) {
-//    m_left->move_start();
-//    m_right->move_start();
-//    m_ball->set_new_ball(win_side);
-//    }
-//    else {
-//    m_left->check_colision(m_ball);
-//    m_right->check_colision(m_ball);
-//    }
+    for (int i = 0; i < 2; ++i) {
+        colis_point = m_game_obj[i]->check_colision(m_ball->get_ball_geomerty());
+        if (colis_point.x != -1 && colis_point.y != -1) {
+//            cout << "detect colision x = " << colis_point.x << " y = " << colis_point.y << endl;
+            m_ball->set_velocity(ball_collision_with_player(i, colis_point));
+        }
+    }
 }
 
 void Game::render_scene()
@@ -134,7 +177,6 @@ void Game::render_scene()
 
     switch (m_state) {
         case (GameState::MainMenu): {
-
         }
         case (GameState::GameScreen) : {
 
@@ -142,7 +184,7 @@ void Game::render_scene()
 
             SDL_SetRenderDrawColor(m_window->get_render(), 0, 0, 0, 0);
             SDL_RenderClear(m_window->get_render());
-            SDL_RenderCopy(m_window->get_render(), m_window->get_texture(), NULL, NULL);
+            SDL_RenderCopy(m_window->get_render(), m_window->get_texture("background"), NULL, NULL);
             SDL_SetRenderDrawColor(m_window->get_render(), 255, 255, 255, 1);
 
 //            cout << "m_left x =" << m_left->get_rect()->x << "m_left x=" << m_left->get_rect()->x << endl;
@@ -152,7 +194,15 @@ void Game::render_scene()
             SDL_SetRenderDrawColor(m_window->get_render(), 255, 255, 0, 255);
             SDL_RenderFillRect(m_window->get_render(), m_game_obj[1]->get_rect());
             SDL_SetRenderDrawColor(m_window->get_render(), 255, 0, 1, 1);
-            SDL_RenderFillRect(m_window->get_render(), m_ball->get_rect());
+
+
+//            SDL_Rect newPos = { m_ball->get_rect()->x, m_ball->get_rect()->y, _boundingBox.r*2, _boundingBox.r*2 };
+//            SDL_RenderCopy(renderer, _texture, NULL, &newPos);
+
+
+            SDL_RenderCopy(m_window->get_render(), m_window->get_texture("ball"), NULL,
+                    m_ball->get_rect());
+
             draw_score();
             SDL_RenderPresent(m_window->get_render());
         }
@@ -181,7 +231,7 @@ void Game::render(float interpolation)
 
     SDL_SetRenderDrawColor(m_window->get_render(), 0, 0, 0, 0);
     SDL_RenderClear(m_window->get_render());
-    SDL_RenderCopy(m_window->get_render(), m_window->get_texture(), NULL, NULL);
+    SDL_RenderCopy(m_window->get_render(), m_window->get_texture(std::string()), NULL, NULL);
     SDL_SetRenderDrawColor(m_window->get_render(), 255, 255, 255, 1);
 //    SDL_RenderFillRect(m_window->get_render(), m_left->get_rect());
 //    SDL_RenderFillRect(m_window->get_render(), m_right->get_rect());
@@ -368,6 +418,8 @@ int Game::show_menu()
         SDL_RenderPresent(m_window->get_render());
     }
 }
+
+
 
 
 /*

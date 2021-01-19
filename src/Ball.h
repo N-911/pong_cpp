@@ -2,6 +2,7 @@
 #define PONG_SRC_BALL_H_
 
 #include "GameObjects.h"
+#include <random>
 
 class Ball : public GameObject {
 
@@ -11,8 +12,19 @@ public:
 
     virtual ~Ball() { }
     void move() override;
+    Vec2i check_colision(Circle ball) override;
+
+    void set_rand_velocity();
     void set_new_ball(int side);
+
+    Circle get_ball_geomerty() const;
+
 private:
+    int m_radius;
+    std::mt19937 m_mt;
+    std::random_device m_rdevice;
+
+    void update_box() override;
 
 };
 
@@ -21,7 +33,7 @@ private:
 void moving();
 bool is_movind() const;
 SDL_Rect *get_rect() const { return m_sampleRect; }
-Vec2i get_center() const { return center; }
+Vec2i get_center() const { return center;` }
 Vec2f get_speed() const { return speed; }
 double get_radius() const { return m_radius; }
 void set_new_ball(int side);

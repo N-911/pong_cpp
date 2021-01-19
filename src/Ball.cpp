@@ -7,44 +7,90 @@ using std::endl;
 
 Ball::Ball(int x, int y)
 {
-    m_x = W / 2;
-    m_y = H / 2;
+    m_x = W / 2 - BALL_SIZE / 2;
+    m_y = H / 2 - BALL_SIZE / 2;
     update_box();
     m_object->w = BALL_SIZE;
     m_object->h = BALL_SIZE;
     m_speed = 5;
-    set_velocity(Vec2i{m_speed, m_speed});
+    m_radius = BALL_SIZE / 2;
+//    set_velocity(Vec2i{m_speed, m_speed});
+    set_rand_velocity();
 
 }
 void Ball::move()
 {
-    if (((m_y + m_velocity.y) > H) || ((m_y + m_velocity.y) < 0)) {
+    // down
+    if ((m_y + m_velocity.y) >= H) {
         m_velocity.y = -m_velocity.y;
+        m_y = H - BALL_SIZE;
     }
-    m_y += m_velocity.y;
+        // top
+    else if ((m_y + m_velocity.y) < 0) {
+        m_velocity.y = -m_velocity.y;
+        m_y = 0;
+    }
+    else
+        m_y += m_velocity.y;
+
     m_x += m_velocity.x;
     update_box();
 //    cout << "ball x =" << m_object->x << " ball y =" << m_object->y << endl;
-    cout << "ball x =" << m_x << " ball y =" << m_y << endl;
+//    cout << "ball x =" << m_x << " ball y =" << m_y << endl;
 }
 
 void Ball::set_new_ball(int side)
 {
+    set_rand_velocity();
     if (side == 0) {
         m_velocity.x = -m_speed;
     }
     else if (side == 1) {
         m_velocity.x = m_speed;
-//        m_velocity.y = -m_speed;
     }
+
     m_x = W / 2 - BALL_SIZE / 2;
     m_y = H / 2 + BALL_SIZE / 2;
 
-        cout << "ball velocity x =" << m_velocity.x << " y =" << m_velocity.y << endl;
+    cout << "ball velocity x =" << m_velocity.x << " y =" << m_velocity.y << endl;
     update_box();
 //    set_center();
 //    m_radius = BALL_SIZE / std::sqrt(2.0);
 }
+void Ball::set_rand_velocity()
+{
+    int _rand = m_rdevice();
+    m_mt.seed(_rand);
+
+    std::uniform_int_distribution<int> dist(0, 1);
+
+    if (dist(m_mt) == 1)
+        m_velocity.x = m_speed;
+    else
+        m_velocity.x = -m_speed;
+
+    std::uniform_int_distribution<int> dist2(-3, 3);
+    m_velocity.y = dist2(m_mt);
+
+}
+
+void Ball::update_box()
+{
+//    GameObject::update_box();
+    m_object->x = m_x;
+    m_object->y = m_y;
+}
+
+Circle Ball::get_ball_geomerty() const
+{
+    return {m_x + m_radius, m_y + m_radius, m_radius};
+}
+
+Vec2i Ball::check_colision(Circle ball)
+{
+    return {0, 0};
+}
+
 
 /*
 void Ball::set_center() {
