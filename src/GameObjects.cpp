@@ -27,36 +27,6 @@ void GameObject::update_box()
 }
 
 
-
-/*
-void GameObject::set_center() {
-  center.x = m_sampleRect->x + PLAYER_W / 2;
-  center.y = m_sampleRect->y + PLAYER_H / 2;
-}
-
- */
-
-
-//void GameObject::update_box()
-//{
-//    m_object->x = m_x + m_object->r;
-//    m_object->y = m_y + m_object->r;
-//}
-
-
-//void GameObject::move_start() {
-//  if (m_side == 0) {
-//    m_sampleRect->x = 0;
-//  } else if (m_side == 1) {
-//    m_sampleRect->x = W - PLAYER_W;
-//  }
-//  m_sampleRect->y = H / 2 - PLAYER_H / 2;
-//  speed.x = 0;
-//  speed.y = 0;
-//  set_center();
-//}
-
-
 /*
 void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 

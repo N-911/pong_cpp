@@ -26,7 +26,6 @@ void EventManager::notify(SDL_Event& event)
 
 void EventManager::ChangeStatus(SDL_Event& event)
 {
-//    m_event_type = event;
     notify(event);
 }
 

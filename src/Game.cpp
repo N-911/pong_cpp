@@ -159,8 +159,9 @@ void Game::update()
     for (int i = 0; i < 2; ++i) {
         colis_point = m_game_obj[i]->check_colision(m_ball->get_ball_geomerty());
         if (colis_point.x != -1 && colis_point.y != -1) {
-//            cout << "detect colision x = " << colis_point.x << " y = " << colis_point.y << endl;
+            cout << "detect colision x = " << colis_point.x << " y = " << colis_point.y << endl;
             m_ball->set_velocity(ball_collision_with_player(i, colis_point));
+            cout << "ball  x = " << m_ball->get_ball_geomerty().x << " y = " << m_ball->get_ball_geomerty().y << endl;
         }
     }
 }

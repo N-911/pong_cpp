@@ -11,15 +11,13 @@ public:
     EventManager() = default;
     virtual ~EventManager();
 
-   void ChangeStatus(SDL_Event& event);
-
-    virtual void attach(IObserver *observer) override;
-    virtual void detach(IObserver *observer) override;
+    void ChangeStatus(SDL_Event& event);
+    virtual void attach(IObserver* observer) override;
+    virtual void detach(IObserver* observer) override;
     virtual void notify(SDL_Event& event) override;
 
 private:
-    std::list<IObserver *> m_list_observer;
-//    SDL_Event* m_event_type;
+    std::list<IObserver*> m_list_observer;
 };
 
 #endif //PONG_EVENTMANAGER_H

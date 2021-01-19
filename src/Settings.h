@@ -9,7 +9,7 @@
 #define FPS 40
 #define W 840
 #define H 600
-#define BALL_SIZE (28)
+#define BALL_SIZE (22)
 #define PLAYER_H (80)
 #define PLAYER_W (16)
 #define FONT_SIZE 32
@@ -35,11 +35,6 @@ struct Circle {
   int x;
   int y;
   int r;
-};
-
-struct Vec2d {
-  int x;
-  int y;
 };
 
 #endif //PONG_SRC_SETTINGS_H_

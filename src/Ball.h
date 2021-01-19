@@ -12,7 +12,7 @@ public:
 
     virtual ~Ball() { }
     void move() override;
-    Vec2i check_colision(Circle ball) override;
+    Vec2i check_colision(Circle ball) const override;
 
     void set_rand_velocity();
     void set_new_ball(int side);

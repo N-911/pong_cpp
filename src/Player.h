@@ -13,13 +13,8 @@ public:
 
     void update_status(SDL_Event& event) override;
 
-//    void check_move();
-    void move_up();
-    void move_down();
-    void stop();
     void move() override;
-
-    Vec2i check_colision(Circle ball) override;
+    Vec2i check_colision(Circle ball)  const override;
 
 private:
     EventManager& m_observer;
@@ -27,7 +22,10 @@ private:
     int m_current_id;
 
     void process_event(SDL_Event& event);
-    int square_of_distance(int x1, int y1, int x2, int y2);
+    void move_up();
+    void move_down();
+    void stop();
+    int square_of_distance(int x1, int y1, int x2, int y2) const;
 };
 
 #endif //PONG_SRC_PLAYER_H_

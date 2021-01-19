@@ -45,8 +45,8 @@ Window::~Window()
     SDL_Quit();
 }
 
-
-SDL_Texture* Window::load_texture(const char* file) {
+SDL_Texture* Window::load_texture(const char* file)
+{
 
     SDL_Texture* newTexture = NULL;
 
@@ -160,20 +160,3 @@ SDL_Texture* Window::get_texture(std::string key)
     }
     return nullptr;
 }
-
-
-// Load image at specified path
-/*
-m_surface = IMG_Load("resources/floor.png");
-if (m_surface == NULL) {
-    printf("[Error] Unable to load image : %s\n", SDL_GetError());
-    exit(0);
-}
-else {
-    m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
-    if (m_texture == NULL) {
-        printf("[Error] Unable to create texture : %s\n", SDL_GetError());
-    }
-    SDL_FreeSurface(m_surface);
-}
- */

@@ -7,8 +7,10 @@ using std::endl;
 
 Ball::Ball(int x, int y)
 {
-    m_x = W / 2 - BALL_SIZE / 2;
-    m_y = H / 2 - BALL_SIZE / 2;
+    // m_x, m_ y  centre circle, m_radius - radius
+    m_x = W / 2;
+    m_y = H / 2;
+
     update_box();
     m_object->w = BALL_SIZE;
     m_object->h = BALL_SIZE;
@@ -16,19 +18,25 @@ Ball::Ball(int x, int y)
     m_radius = BALL_SIZE / 2;
 //    set_velocity(Vec2i{m_speed, m_speed});
     set_rand_velocity();
-
 }
+
+void Ball::update_box()
+{
+    m_object->x = m_x - m_radius;
+    m_object->y = m_y - m_radius;
+}
+
 void Ball::move()
 {
     // down
     if ((m_y + m_velocity.y) >= H) {
         m_velocity.y = -m_velocity.y;
-        m_y = H - BALL_SIZE;
+        m_y = H - m_radius;
     }
         // top
     else if ((m_y + m_velocity.y) < 0) {
         m_velocity.y = -m_velocity.y;
-        m_y = 0;
+        m_y = m_radius;
     }
     else
         m_y += m_velocity.y;
@@ -48,14 +56,11 @@ void Ball::set_new_ball(int side)
     else if (side == 1) {
         m_velocity.x = m_speed;
     }
-
-    m_x = W / 2 - BALL_SIZE / 2;
-    m_y = H / 2 + BALL_SIZE / 2;
+    m_x = W / 2;
+    m_y = H / 2;
 
     cout << "ball velocity x =" << m_velocity.x << " y =" << m_velocity.y << endl;
     update_box();
-//    set_center();
-//    m_radius = BALL_SIZE / std::sqrt(2.0);
 }
 void Ball::set_rand_velocity()
 {
@@ -74,29 +79,19 @@ void Ball::set_rand_velocity()
 
 }
 
-void Ball::update_box()
-{
-//    GameObject::update_box();
-    m_object->x = m_x;
-    m_object->y = m_y;
-}
-
 Circle Ball::get_ball_geomerty() const
 {
-    return {m_x + m_radius, m_y + m_radius, m_radius};
+    return {m_x, m_y, m_radius};
 }
 
-Vec2i Ball::check_colision(Circle ball)
+Vec2i Ball::check_colision(Circle ball) const
 {
     return {0, 0};
 }
 
 
 /*
-void Ball::set_center() {
-  center.x = m_sampleRect->x + BALL_SIZE / 2;
-  center.y = m_sampleRect->y + BALL_SIZE / 2;
-}
+
 
 void Ball::moving() {
   if (m_sampleRect->y + speed.y <= 0 || m_sampleRect->y + BALL_SIZE + speed.y >= H) {
@@ -114,23 +109,6 @@ void Ball::moving() {
 
 bool Ball::is_movind() const {
   return speed.x != 0 || speed.y != 0;
-}
-
-
-
-void Ball::set_rect_x(int x) {
-  m_sampleRect->x = x;
-}
-
-void Ball::set_rect_y(int y) {
-  m_sampleRect->y = y;
-}
-void Ball::set_speed_x(int x) {
-  speed.x = x;
-}
-
-void Ball::set_speed_y(int y) {
-  speed.y = y;
 }
 
  */

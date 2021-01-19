@@ -33,7 +33,7 @@ public:
     void set_y(int n);
 
     virtual void move() = 0;
-    virtual Vec2i check_colision(Circle ball) = 0;
+    virtual Vec2i check_colision(Circle ball) const = 0;
 
 protected:
     int m_speed{0};
@@ -42,7 +42,7 @@ protected:
     Vec2i m_velocity{0, 0};
     SDL_Rect* m_object;
 
-   virtual void update_box();
+    virtual void update_box();
 };
 
 #endif //PONG_SRC_GAMEOBJECTS_H_

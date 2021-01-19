@@ -105,14 +105,12 @@ void Player::move()
     update_box();
 }
 
-Vec2i Player::check_colision(Circle ball)
+Vec2i Player::check_colision(Circle ball) const
 {
 //    cout << "m_x = " << m_x << " m_y = " << m_y << endl;
 //    cout << "ball x = " << ball.x << " ball y = " << ball.y << endl;
     int col_x = -1;
     int col_y = -1;
-
-
 
     if (ball.y > m_y + PLAYER_H) {
         col_y = m_y + PLAYER_H;
@@ -144,7 +142,7 @@ Vec2i Player::check_colision(Circle ball)
     }
 }
 
-int Player::square_of_distance(int x1, int y1, int x2, int y2)
+int Player::square_of_distance(int x1, int y1, int x2, int y2) const
 {
     return static_cast<int>(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
