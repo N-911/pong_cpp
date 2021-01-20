@@ -27,6 +27,12 @@ void GameObject::update_box()
 }
 
 
+int GameObject::square_of_distance(int x1, int y1, int x2, int y2) const
+{
+    return static_cast<int>(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+}
+
+
 /*
 void GameObject::check_colision(std::shared_ptr<Ball> m_ball) {
 

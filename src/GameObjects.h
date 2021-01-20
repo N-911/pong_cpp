@@ -9,8 +9,6 @@
 
 using std::cout;
 
-class Ball;
-
 class GameObject {
 
 public:
@@ -33,6 +31,8 @@ public:
     void set_y(int n);
 
     virtual void move() = 0;
+    void move(Circle ball);
+
     virtual Vec2i check_colision(Circle ball) const = 0;
 
 protected:
@@ -43,6 +43,7 @@ protected:
     SDL_Rect* m_object;
 
     virtual void update_box();
+    int square_of_distance(int x1, int y1, int x2, int y2) const;
 };
 
 #endif //PONG_SRC_GAMEOBJECTS_H_

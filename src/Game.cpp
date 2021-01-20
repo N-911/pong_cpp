@@ -1,11 +1,14 @@
 #include "Game.h"
 #include <iostream>
+#include <iomanip>
 #include <memory>
 
 #include "IEventManager.h"
 
 using std::cout;
 using std::endl;
+
+void print_FPS(uint32_t time_since_start, int frames);
 
 Game::Game()
 {
@@ -37,8 +40,10 @@ Game::Game()
     m_ball = std::unique_ptr<Ball>(new Ball(W / 2, H / 2));
     m_game_obj.push_back(std::unique_ptr<Player>(new Player(*m_event_manager, 0)));
 
+    m_timeAtLaunch = SDL_GetTicks();
+
     if (m_number_pl == 1) {
-//        m_right = std::unique_ptr<Bot>(new Bot());
+        m_game_obj.push_back(std::unique_ptr<Bot>(new Bot(1)));
     }
     else {
         m_game_obj.push_back(std::unique_ptr<Player>(new Player(*m_event_manager, 1)));
@@ -56,6 +61,8 @@ void Game::game_loop()
     SDL_Event event;
     static int lastTime = 0;
     while (m_loop) {
+        int t1 = SDL_GetTicks();
+
         m_last_frame = SDL_GetTicks();  // number of milliseconds since the SDL library initialized
         if (m_last_frame >= (lastTime + 1000)) {
             lastTime = m_last_frame;
@@ -95,9 +102,13 @@ void Game::game_loop()
         if (!m_pause)
             update();
         render_scene();
+        // Delay to keep FPS consistent
+        int t2 = SDL_GetTicks() - t1;
+        int ticks_per_frame = 1000 / 60;
+        if (t2 < ticks_per_frame) SDL_Delay(ticks_per_frame - t2);
+        print_FPS(m_timeAtLaunch, m_frames);
     }
 }
-
 
 Vec2i Game::ball_collision_with_player(int i, Vec2i col)
 {
@@ -116,7 +127,6 @@ Vec2i Game::ball_collision_with_player(int i, Vec2i col)
     m_ball->set_x(prew_x_ball);
     m_ball->set_y(prew_y_ball);
 
-
     platform_left = m_game_obj[i]->get_rect()->x;
     platform_right = m_game_obj[i]->get_rect()->x + PLAYER_W;
     platform_top = m_game_obj[i]->get_rect()->y;
@@ -134,7 +144,7 @@ Vec2i Game::ball_collision_with_player(int i, Vec2i col)
     int direction_multiplier_y = 1;
 
     if (col.y - m_ball->velocity().y >= platform_bottom || col.y - m_ball->velocity().y <= platform_top)
-        direction_multiplier_y = -1;	// check if bottom or top of platform was hit
+        direction_multiplier_y = -1;    // check if bottom or top of platform was hit
 
     // Calculate new y velocity
     int velocity_y = y_magnitude * y_dir_ball * direction_multiplier_y;
@@ -170,11 +180,11 @@ void Game::render_scene()
 {
     SDL_RenderClear(m_window->get_render());
 
-    m_frame_count++;
-    int timerFPS = SDL_GetTicks() - m_last_frame;
-    if (timerFPS < (1000 / 60)) {
-        SDL_Delay((1000 / 60) - timerFPS);
-    }
+//    m_frame_count++;
+//    int timerFPS = SDL_GetTicks() - m_last_frame;
+//    if (timerFPS < (1000 / 60)) {
+//        SDL_Delay((1000 / 60) - timerFPS);
+//    }
 
     switch (m_state) {
         case (GameState::MainMenu): {
@@ -209,18 +219,18 @@ void Game::render_scene()
         }
         default: break;
     }
-
+    m_frames++;
 }
 
 void Game::render(float interpolation)
 {
     SDL_RenderClear(m_window->get_render());
 
-    m_frame_count++;
-    int timerFPS = SDL_GetTicks() - m_last_frame;
-    if (timerFPS < (1000 / 60)) {
-        SDL_Delay((1000 / 60) - timerFPS);
-    }
+//    m_frame_count++;
+//    int timerFPS = SDL_GetTicks() - m_last_frame;
+//    if (timerFPS < (1000 / 60)) {
+//        SDL_Delay((1000 / 60) - timerFPS);
+//    }
 
     // Интерполяция и предсказание смещение шарика
 //  view_position = position + (speed * interpolation)
@@ -418,6 +428,13 @@ int Game::show_menu()
         SDL_RenderCopy(m_window->get_render(), texture, NULL, &rect);
         SDL_RenderPresent(m_window->get_render());
     }
+}
+
+void print_FPS(uint32_t time_since_start, int frames)
+{
+    int t = SDL_GetTicks();
+    float fps = (static_cast<float>(frames) * 1000) / (t - time_since_start);
+    std::cout << "Avg FPS: " << std::setprecision(2) << fps << "\n";
 }
 
 

@@ -142,10 +142,7 @@ Vec2i Player::check_colision(Circle ball) const
     }
 }
 
-int Player::square_of_distance(int x1, int y1, int x2, int y2) const
-{
-    return static_cast<int>(pow(x1 - x2, 2) + pow(y1 - y2, 2));
-}
+
 
 
 //void Player::check_move()

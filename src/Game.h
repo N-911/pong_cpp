@@ -29,6 +29,8 @@ private:
     Window* m_window;
     GameState m_state;
     SDL_bool m_loop;
+    uint32_t m_timeAtLaunch;
+    int m_frames;
 
     int m_frame_count;
     unsigned int m_last_frame;

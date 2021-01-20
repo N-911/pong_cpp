@@ -8,11 +8,15 @@ class Ball;
 class Bot : public GameObject {
 
 public:
-    Bot();
+    Bot(int side);
     virtual ~Bot() { }
 
-    void move_to_ball();
+    void move() {};
+    void move(Circle ball);
+    Vec2i check_colision(Circle ball) const override;
 //    void moving() override { };
+private:
+    const int m_side;
 
 };
 
