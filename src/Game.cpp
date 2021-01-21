@@ -37,16 +37,16 @@ Game::Game()
 
     m_window = new Window(*m_event_manager);
 
-    m_ball = std::unique_ptr<Ball>(new Ball(W / 2, H / 2));
-    m_game_obj.push_back(std::unique_ptr<Player>(new Player(*m_event_manager, 0)));
+    m_ball = std::make_unique<Ball>(W / 2, H / 2);
+    m_game_obj.push_back(std::make_unique<Player>(*m_event_manager, 0));
 
     m_timeAtLaunch = SDL_GetTicks();
 
     if (m_number_pl == 1) {
-        m_game_obj.push_back(std::unique_ptr<Bot>(new Bot(1)));
+        m_game_obj.push_back(std::make_unique<Bot>(1));
     }
     else {
-        m_game_obj.push_back(std::unique_ptr<Player>(new Player(*m_event_manager, 1)));
+        m_game_obj.push_back(std::make_unique<Player>(*m_event_manager, 1));
     }
     m_pause = false;
 }

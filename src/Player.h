@@ -9,7 +9,7 @@ class Player :
 
 public:
     Player(EventManager& observable, int side);
-    virtual ~Player() override;
+    ~Player() override;
 
     void update_status(SDL_Event& event) override;
 

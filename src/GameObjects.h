@@ -19,7 +19,7 @@ public:
     GameObject(GameObject&& other) = delete;
     GameObject& operator=(GameObject&& other) = delete;
 
-    ~GameObject() = default;
+    virtual ~GameObject() = default;
 
     // get
     Vec2i velocity() const { return m_velocity; }

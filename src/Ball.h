@@ -10,7 +10,7 @@ public:
     Ball() = default;
     Ball(int x, int y);
 
-    virtual ~Ball() { }
+     ~Ball() override { }
     void move() override;
     Vec2i check_colision(Circle ball) const override;
 

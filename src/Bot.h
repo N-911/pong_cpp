@@ -11,8 +11,8 @@ public:
     Bot(int side);
     virtual ~Bot() { }
 
-    void move() {};
-    void move(Circle ball);
+    void move() override {};
+    void move(Circle ball) ;
     Vec2i check_colision(Circle ball) const override;
 //    void moving() override { };
 private:
